@@ -1,0 +1,23 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Environment
+.env
+backend/.env
+
+# Build outputs
+dist/
+frontend/dist/
+
+# OS files
+.DS_Store
+
+# Uploads
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# IDE files
+.vscode/
+.idea/
