@@ -2,7 +2,11 @@
     "rewrites": [
         {
             "source": "/api/:path*",
-            "destination": "http://localhost:5001/api/:path*"
+            "destination": "https://smarthire-api-production.up.railway.app/api/:path*"
+        },
+        {
+            "source": "/(.*)",
+            "destination": "/index.html"
         }
     ]
 }
