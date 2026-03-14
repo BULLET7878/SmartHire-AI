@@ -28,7 +28,11 @@ const Login = () => {
             localStorage.setItem('user', JSON.stringify(userData));
             navigate('/dashboard');
         } catch (err) {
-            setError(err.response?.data?.message || 'Invalid credentials');
+            if (!err.response) {
+                setError('Network Error: Backend server is unreachable');
+            } else {
+                setError(err.response?.data?.message || 'Authentication failed');
+            }
         }
     };
 
@@ -37,23 +41,23 @@ const Login = () => {
             <div className={`w-full max-w-md transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
 
                 {/* Modern Tech Card */}
-                <div className="card tech-border animate-scanline shadow-2xl relative overflow-hidden group">
+                <div className="card border border-white/10 shadow-2xl relative overflow-hidden group">
                     {/* Glowing Accent */}
                     <div className="absolute top-0 right-1/4 w-1/2 h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"></div>
 
                     <div className="relative z-10">
                         <header className="text-center mb-12">
                             <div className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-4">
-                                <span className="text-[10px] font-black text-purple-400 uppercase tracking-[0.4em]">Auth Protocol: Secure</span>
+                                <span className="text-[10px] font-black text-purple-400 uppercase tracking-[0.4em]">Login</span>
                             </div>
                             <h2 className="text-4xl font-black text-white italic tracking-tighter mb-2">Welcome Back</h2>
-                            <p className="text-gray-500 text-[12px] font-bold uppercase tracking-widest opacity-60">Authentication Required to Proceed</p>
+                            <p className="text-gray-500 text-[12px] font-bold uppercase tracking-widest opacity-60">Please enter your details to sign in.</p>
                         </header>
 
                         <form onSubmit={handleLogin} className="space-y-6">
                             <div className="space-y-5">
                                 <div className={`transition-all duration-700 delay-100 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1 transition-colors group-focus-within:text-white">Access: Email</label>
+                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1 transition-colors group-focus-within:text-white">Email Address</label>
                                     <div className="relative group">
                                         <input
                                             type="email"
@@ -68,7 +72,7 @@ const Login = () => {
                                 </div>
 
                                 <div className={`transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1 transition-colors group-focus-within:text-white">Access: Passkey</label>
+                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1 transition-colors group-focus-within:text-white">Password</label>
                                     <div className="relative group">
                                         <input
                                             type="password"
@@ -84,8 +88,8 @@ const Login = () => {
                             </div>
 
                             {error && (
-                                <div className="bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-xl text-[12px] font-black uppercase text-red-400 text-center tracking-widest animate-pulse">
-                                    Auth Error: {error}
+                                <div className="bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-xl text-[12px] font-black uppercase text-red-400 text-center tracking-widest">
+                                    Error: {error}
                                 </div>
                             )}
 
@@ -94,10 +98,9 @@ const Login = () => {
                                 className="group relative w-full h-16 bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.4em] text-[12px] rounded-2xl transition-all hover:tracking-[0.5em] hover:bg-white/10 active:scale-[0.97] overflow-hidden shadow-2xl"
                             >
                                 <div className="absolute inset-0 bg-purple-500 translate-y-full group-hover:translate-y-0 transition-transform duration-500 opacity-10"></div>
-                                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/5 to-transparent"></span>
                                 <span className="relative z-10 flex items-center justify-center gap-3">
                                     Initiate Login
-                                    <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-ping"></div>
+                                    <div className="w-1.5 h-1.5 bg-white rounded-full animate-pulse shadow-[0_0_10px_white]"></div>
                                 </span>
                             </button>
                         </form>

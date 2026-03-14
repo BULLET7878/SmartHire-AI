@@ -26,33 +26,35 @@ const applyToJob = async (req, res) => {
         const resumeUrl = req.user.resumePath || '';
 
         // --- AUTOMATIC MATCHING LOGIC ---
-        // Wrapped in try-catch to ensure application processing doesn't fail if matching has an issue
         try {
             const Resume = require('../models/Resume');
             const MatchResult = require('../models/MatchResult');
-            const calculateMatchScore = require('../utils/matchUtil');
+            const { calculateMatchInsight } = require('../utils/geminiUtil');
 
             // Find latest resume for this user
             const resume = await Resume.findOne({ userId }).sort({ createdAt: -1 });
 
-            // Calculate Score
-            const matchResult = calculateMatchScore(resume, job);
-
-            // Save Match Result
             if (resume) {
-                await MatchResult.findOneAndUpdate(
-                    { resumeId: resume._id, jobId: job._id },
-                    {
-                        score: matchResult.score,
-                        missingSkills: matchResult.missingSkills,
-                        status: matchResult.status
-                    },
-                    { upsert: true, new: true }
-                );
+                // Calculate Score using Gemini
+                const result = await calculateMatchInsight(resume, job.description || job.title);
+
+                if (result) {
+                    await MatchResult.findOneAndUpdate(
+                        { resumeId: resume._id, jobId: job._id },
+                        {
+                            score: result.score,
+                            subScores: result.subScores,
+                            justification: result.justification,
+                            missingSkills: result.missingSkills,
+                            matchedKeywords: result.matched_keywords,
+                            status: result.score >= 75 ? 'Strong Match' : result.score >= 40 ? 'Medium Match' : 'Weak Match'
+                        },
+                        { upsert: true, new: true }
+                    );
+                }
             }
         } catch (matchErr) {
             console.error("Auto-match failed:", matchErr);
-            // Continue to create application even if match fails
         }
 
         // Create application
@@ -61,8 +63,6 @@ const applyToJob = async (req, res) => {
             job: jobId,
             resumeUrl,
             status: 'Applied',
-            // We could store score on application too for faster lookup, 
-            // but for now we'll join via MatchResult or just rely on the separate calc
         });
 
         res.status(201).json(application);
@@ -89,62 +89,59 @@ const getJobApplications = async (req, res) => {
 
         const isRecruiter = job.postedBy.toString() === req.user._id.toString();
 
+        if (!isRecruiter) {
+            console.warn(`Denied: Recruiter ${req.user._id} attempted to access applicants for Job ${jobId} owned by ${job.postedBy}`);
+            return res.status(403).json({ message: 'Access denied: You do not own this job posting' });
+        }
+
         // Get applications with user details
         const applications = await Application.find({ job: jobId })
             .populate('user', 'name email role resumePath')
             .sort({ appliedAt: -1 });
 
-        // Fetch match results for each applicant to show scores to recruiter
-        const Resume = require('../models/Resume');
-        const MatchResult = require('../models/MatchResult');
-        const calculateMatchScore = require('../utils/matchUtil');
-
-        // Create regex filter for valid applications
         const validApplications = applications.filter(app => app.user);
 
-        const enrichedApplications = await Promise.all(validApplications.map(async (app) => {
+        // BULK FETCH Resumes
+        const userIds = validApplications.map(app => app.user._id);
+        const Resume = require('../models/Resume');
+        const MatchResult = require('../models/MatchResult');
+
+        // We fetch the latest resume per user using aggregation or simple find + group in mem
+        const allResumes = await Resume.find({ userId: { $in: userIds } }).sort({ createdAt: -1 });
+        const resumeMap = {}; // userId -> latest Resume
+        const resumeIds = [];
+
+        allResumes.forEach(r => {
+            if (!resumeMap[r.userId.toString()]) {
+                resumeMap[r.userId.toString()] = r;
+                resumeIds.push(r._id);
+            }
+        });
+
+        // BULK FETCH Matches
+        const allMatches = await MatchResult.find({ resumeId: { $in: resumeIds }, jobId: jobId });
+        const matchMap = {}; // resumeId -> MatchResult
+        allMatches.forEach(m => {
+            matchMap[m.resumeId.toString()] = m;
+        });
+
+        const enrichedApplications = validApplications.map((app) => {
             const data = app.toObject();
-
-            // Safe to access app.user._id now
-            const resume = await Resume.findOne({ userId: app.user._id }).sort({ createdAt: -1 });
-
-            let matchScore = 0;
-            let matchStatus = 'Weak Match';
-            let missingSkills = [];
+            const resume = resumeMap[app.user._id.toString()];
 
             if (resume) {
-                // Try to find existing match result
-                let match = await MatchResult.findOne({ resumeId: resume._id, jobId: jobId });
-
-                // If not found (legacy data), calculate it now
-                if (!match) {
-                    const result = calculateMatchScore(resume, job);
-                    matchScore = result.score;
-                    matchStatus = result.status;
-                    missingSkills = result.missingSkills;
-                } else {
-                    matchScore = match.score;
-                    matchStatus = match.status;
-                    missingSkills = match.missingSkills;
-                }
-
-                // Inject skills for frontend (User model doesn't have it, Resume does)
-                if (data.user) {
-                    data.user.skills = resume.skills || [];
-                }
-            }
-
-            data.matchScore = matchScore;
-            data.matchStatus = matchStatus;
-
-            // Allow frontend to see what skills are missing according to ATS
-            if (matchStatus !== 'Weak Match' && resume) {
-                data.missingSkills = missingSkills || [];
-            }
-
-            // Inject Metadata for Recruiter ATS Analysis
-            if (resume && resume.metadata) {
+                const match = matchMap[resume._id.toString()];
+                data.matchScore = match ? match.score : 0;
+                data.matchStatus = match ? match.status : 'Weak Match';
+                data.justification = match ? match.justification : '';
+                data.subScores = match ? match.subScores : null;
+                data.missingSkills = match ? match.missingSkills : [];
+                data.matchedKeywords = match ? match.matchedKeywords : [];
+                data.aiSummary = resume.aiSummary || '';
+                data.user.skills = resume.skills || [];
                 data.resumeMeta = resume.metadata;
+            } else {
+                data.matchScore = 0;
             }
 
             if (!isRecruiter) {
@@ -152,9 +149,9 @@ const getJobApplications = async (req, res) => {
                 delete data.resumeUrl;
             }
             return data;
-        }));
+        });
 
-        // Rank by match score (highest first)
+        // Rank by match score (highest first) - Automatic Ranking
         const ranked = enrichedApplications.sort((a, b) => b.matchScore - a.matchScore);
 
         res.json(ranked);
@@ -178,14 +175,34 @@ const getMyApplications = async (req, res) => {
 
         const resume = await Resume.findOne({ userId: req.user._id }).sort({ createdAt: -1 });
 
-        const output = await Promise.all(applications.map(async (app) => {
+        let matchMap = {};
+        if (resume && applications.length > 0) {
+            const jobIds = applications.filter(a => a.job).map(a => a.job._id);
+            const matches = await MatchResult.find({ resumeId: resume._id, jobId: { $in: jobIds } });
+            matches.forEach(m => {
+                matchMap[m.jobId.toString()] = m;
+            });
+        }
+
+        const output = applications.map((app) => {
             const data = app.toObject();
             if (resume && app.job) {
-                const match = await MatchResult.findOne({ resumeId: resume._id, jobId: app.job._id });
-                data.matchScore = match ? match.score : 0;
+                const match = matchMap[app.job._id.toString()];
+                if (match) {
+                    data.matchScore = match.score;
+                    data.matchStatus = match.status;
+                    data.subScores = match.subScores;
+                    data.justification = match.justification;
+                    data.missingSkills = match.missingSkills;
+                    data.matchedKeywords = match.matchedKeywords;
+                } else {
+                    data.matchScore = 0;
+                }
+            } else {
+                data.matchScore = 0;
             }
             return data;
-        }));
+        });
 
         res.json(output);
     } catch (error) {
@@ -241,13 +258,35 @@ const getPulse = async (req, res) => {
     try {
         const jobs = await Job.find({ postedBy: req.user._id });
         const jobIds = jobs.map(j => j._id);
-        const applications = await Application.find({ job: { $in: jobIds } });
+
+        // Use aggregation to count statuses efficiently without transferring full docs to memory
+        const stats = await Application.aggregate([
+            { $match: { job: { $in: jobIds } } },
+            {
+                $group: {
+                    _id: "$status",
+                    count: { $sum: 1 }
+                }
+            }
+        ]);
+
+        let totalApplied = 0;
+        let shortlisted = 0;
+        let rejected = 0;
+        let reviewed = 0;
+
+        stats.forEach(stat => {
+            totalApplied += stat.count;
+            if (stat._id === 'Shortlisted') shortlisted = stat.count;
+            if (stat._id === 'Rejected') rejected = stat.count;
+            if (['Reviewed', 'Review Later'].includes(stat._id)) reviewed += stat.count;
+        });
 
         res.json({
-            totalApplied: applications.length,
-            shortlisted: applications.filter(a => a.status === 'Shortlisted').length,
-            rejected: applications.filter(a => a.status === 'Rejected').length,
-            reviewed: applications.filter(a => ['Reviewed', 'Review Later'].includes(a.status)).length,
+            totalApplied,
+            shortlisted,
+            rejected,
+            reviewed,
             totalJobs: jobs.length
         });
     } catch (error) {
@@ -263,29 +302,28 @@ const getMatchInsight = async (req, res) => {
 
         const Resume = require('../models/Resume');
         const MatchResult = require('../models/MatchResult');
-        const calculateMatchScore = require('../utils/matchUtil');
+        const { calculateMatchInsight } = require('../utils/geminiUtil');
 
         const resume = await Resume.findOne({ userId: req.user._id }).sort({ createdAt: -1 });
         if (!resume) return res.status(404).json({ message: 'No resume found' });
 
-        const result = calculateMatchScore(resume, job);
+        const result = await calculateMatchInsight(resume, job.description || job.title);
 
-        await MatchResult.findOneAndUpdate(
-            { resumeId: resume._id, jobId: job._id },
-            {
-                score: result.score,
-                missingSkills: result.missingSkills,
-                status: result.status
-            },
-            { upsert: true, new: true }
-        );
+        if (result) {
+            await MatchResult.findOneAndUpdate(
+                { resumeId: resume._id, jobId: job._id },
+                {
+                    score: result.score,
+                    subScores: result.subScores,
+                    justification: result.justification,
+                    missingSkills: result.missingSkills,
+                    status: result.score >= 75 ? 'Strong Match' : result.score >= 40 ? 'Medium Match' : 'Weak Match'
+                },
+                { upsert: true, new: true }
+            );
+        }
 
-        res.json({
-            score: result.score,
-            status: result.status,
-            matchedSkills: result.matchedSkills,
-            missingSkills: result.missingSkills
-        });
+        res.json(result);
     } catch (error) {
         res.status(500).json({ message: "Insight failed" });
     }

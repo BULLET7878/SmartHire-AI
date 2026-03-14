@@ -18,12 +18,12 @@ const calculateMatchScore = (resume, job) => {
         missingSkills = jobSkills.filter(skill => !userSkills.includes(skill));
         skillScore = (matchedSkills.length / jobSkills.length) * 50;
     } else {
-        skillScore = 50;
+        skillScore = 0; // Don't give free points
     }
 
-    // 2. NLP-based Description Similarity Score (Weight: 30%)
+    // 2. NLP-based Description Similarity Score (Weight: 30% normally, 80% if no requiredSkills)
     const similarity = calculateCosineSimilarity(resume.rawText, job.description || "");
-    const similarityScore = similarity * 30;
+    const similarityScore = Math.floor(similarity * (jobSkills.length > 0 ? 30 : 80));
 
     // 3. Experience and Metadata Score (Weight: 20%)
     let expScore = 0;

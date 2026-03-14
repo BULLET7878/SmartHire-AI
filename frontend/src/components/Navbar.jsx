@@ -25,7 +25,7 @@ const Navbar = () => {
                         <path d="M2 13L4 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                         <path d="M20 13L22 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
                     </svg>
-                    <span>resume.ai</span>
+                    <span>SmartHire AI</span>
                 </Link>
 
                 <div className="flex items-center gap-6 text-sm font-medium">

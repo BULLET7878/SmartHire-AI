@@ -15,7 +15,19 @@ const matchResultSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+    subScores: {
+        skills: { type: Number, default: 0 },
+        experience: { type: Number, default: 0 },
+        projects: { type: Number, default: 0 },
+        education: { type: Number, default: 0 }
+    },
+    justification: {
+        type: String
+    },
     missingSkills: [{
+        type: String
+    }],
+    matchedKeywords: [{
         type: String
     }],
     status: {

@@ -20,7 +20,7 @@ const Home = () => {
                         <span className="gradient-text">with precision.</span>
                     </h1>
                     <p className="text-xl text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
-                        AI-driven resume analysis and job matching for modern recruitment. Simple, fast, and effectively designed for the future of hiring.
+                        Automated resume analysis and job matching for modern recruitment. Simple, fast, and effectively designed for the future of hiring.
                     </p>
                 </div>
 

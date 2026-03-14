@@ -31,6 +31,15 @@ const RecruiterDashboard = ({ onJobCreated }) => {
     // Resume Viewer
     const [viewResume, setViewResume] = useState(null);
 
+    // Toast & Dialog States
+    const [toast, setToast] = useState(null);
+    const [jobToDelete, setJobToDelete] = useState(null);
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000);
+    };
+
     useEffect(() => {
         loadData();
     }, []);
@@ -106,15 +115,21 @@ const RecruiterDashboard = ({ onJobCreated }) => {
         }
     };
 
-    const kill = async (id) => {
-        if (!window.confirm('Delete this listing?')) return;
+    const triggerDelete = (job) => {
+        setJobToDelete(job);
+    };
+
+    const confirmDelete = async () => {
+        if (!jobToDelete) return;
         try {
-            await api.delete(`/jobs/${id}`);
+            await api.delete(`/jobs/${jobToDelete._id}`);
             loadData();
-            setMsg('Listing removed');
-            setTimeout(() => setMsg(''), 4000);
+            showToast('Listing removed successfully', 'success');
         } catch (err) {
-            setMsg('Delete failed');
+            console.error("Delete failed:", err);
+            showToast('Failed to remove listing', 'error');
+        } finally {
+            setJobToDelete(null);
         }
     };
 
@@ -161,6 +176,21 @@ const RecruiterDashboard = ({ onJobCreated }) => {
             if (activeJob) viewApplicants(activeJob);
         } catch (err) {
             console.error("Status update failed");
+        }
+    };
+
+    const reEvaluateAts = async (jobId) => {
+        try {
+            setMsg('Re-evaluating ATS scores...');
+            await api.post(`/jobs/${jobId}/re-evaluate`);
+            if (activeJob && activeJob._id === jobId) {
+                viewApplicants(activeJob);
+            }
+            setMsg('ATS re-evaluation complete');
+            setTimeout(() => setMsg(''), 4000);
+        } catch (err) {
+            console.error("Re-evaluate failed");
+            setMsg('Failed to re-evaluate ATS scores');
         }
     };
 
@@ -393,7 +423,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                             <div key={job._id} className={`card ${activeJob?._id === job._id ? 'border-blue-500/50 bg-blue-500/5' : 'bg-white/5 border-white/5'} ${job.status === 'Closed' ? 'opacity-50 grayscale' : ''} hover:border-white/20 transition-all duration-500 group relative`}>
                                 <div className="absolute top-0 right-0 p-6 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-all z-20">
                                     <button onClick={() => edit(job)} className="w-10 h-10 bg-white/10 hover:bg-white text-white hover:text-black rounded-xl flex items-center justify-center transition-all border border-white/10 shadow-xl" title="Edit">✏️</button>
-                                    <button onClick={() => kill(job._id)} className="w-10 h-10 bg-white/10 hover:bg-red-500 text-white rounded-xl flex items-center justify-center transition-all border border-white/10 shadow-xl" title="Delete">🗑️</button>
+                                    <button onClick={() => triggerDelete(job)} className="w-10 h-10 bg-white/10 hover:bg-red-500 text-white rounded-xl flex items-center justify-center transition-all border border-white/10 shadow-xl" title="Delete">🗑️</button>
                                     <button
                                         onClick={async (e) => {
                                             e.stopPropagation();
@@ -476,7 +506,14 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                         <option className="bg-slate-900" value="date">Date Applied</option>
                                     </select>
                                 </div>
-                                <button onClick={() => setActiveJob(null)} className="md:ml-4 text-[12px] font-black bg-white/5 px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 hover:text-white mt-auto">Close Feed</button>
+                                <div className="flex gap-2 md:ml-4 mt-auto">
+                                    <button onClick={() => reEvaluateAts(activeJob._id)} className="text-[10px] font-black bg-blue-500/10 px-4 py-3 rounded-2xl border border-blue-500/30 hover:bg-blue-500/20 transition-all uppercase tracking-widest text-blue-400">
+                                        Re-evaluate ATS
+                                    </button>
+                                    <button onClick={() => setActiveJob(null)} className="text-[12px] font-black bg-white/5 px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 hover:text-white">
+                                        Close Feed
+                                    </button>
+                                </div>
                             </div>
                         </div>
 
@@ -519,30 +556,103 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                     <h5 className="text-xl font-black text-white group-hover:text-blue-400 transition-colors uppercase tracking-tighter">{app.user.name}</h5>
                                                     <p className="text-[11px] font-medium text-gray-500 italic mt-1">{app.user.email}</p>
 
+                                                    {/* Candidate Summary */}
+                                                    {app.aiSummary && (
+                                                        <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                                                            <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Professional Insight</p>
+                                                            <p className="text-[11px] text-gray-300 leading-relaxed italic">"{app.aiSummary}"</p>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Match Justification */}
+                                                    {app.justification && (
+                                                        <div className="mt-4 p-3 bg-purple-500/5 border border-purple-500/10 rounded-xl">
+                                                            <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-1">Matching Justification</p>
+                                                            <p className="text-[11px] text-gray-300 leading-relaxed">{app.justification}</p>
+                                                        </div>
+                                                    )}
+
+                                                    {/* Score Breakdown */}
+                                                    {app.subScores && (
+                                                        <div className="mt-4 space-y-2">
+                                                            <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Match Breakdown</p>
+                                                            <div className="grid grid-cols-2 gap-x-4 gap-y-2">
+                                                                <div className="space-y-1">
+                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                        <span>Skills</span>
+                                                                        <span>{app.subScores.skills}%</span>
+                                                                    </div>
+                                                                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                                                        <div className="h-full bg-blue-400" style={{ width: `${app.subScores.skills}%` }}></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                        <span>Experience</span>
+                                                                        <span>{app.subScores.experience}%</span>
+                                                                    </div>
+                                                                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                                                        <div className="h-full bg-purple-400" style={{ width: `${app.subScores.experience}%` }}></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                        <span>Keywords</span>
+                                                                        <span>{app.subScores.keywordMatch}%</span>
+                                                                    </div>
+                                                                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                                                        <div className="h-full bg-green-400" style={{ width: `${app.subScores.keywordMatch}%` }}></div>
+                                                                    </div>
+                                                                </div>
+                                                                <div className="space-y-1">
+                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                        <span>Education</span>
+                                                                        <span>{app.subScores.education}%</span>
+                                                                    </div>
+                                                                    <div className="h-1 bg-white/5 rounded-full overflow-hidden">
+                                                                        <div className="h-full bg-yellow-400" style={{ width: `${app.subScores.education}%` }}></div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
+
                                                     {/* Skill Analysis (ATS Based) */}
                                                     <div className="mt-4">
                                                         {app.missingSkills && app.missingSkills.length > 0 ? (
-                                                            <div className="space-y-2">
-                                                                <p className="text-[9px] font-black text-red-400 uppercase tracking-widest">Missing Skills (ATS Analysis)</p>
-                                                                <div className="flex flex-wrap gap-1.5">
-                                                                    {app.missingSkills.slice(0, 6).map(skill => (
-                                                                        <span key={skill} className="px-2 py-0.5 bg-red-500/10 border border-red-500/20 text-[9px] font-black text-red-400 rounded-md uppercase tracking-tighter">
-                                                                            {skill}
-                                                                        </span>
-                                                                    ))}
-                                                                    {app.missingSkills.length > 6 && <span className="text-[9px] font-black text-red-400">+{app.missingSkills.length - 6} more</span>}
+                                                            <div className="space-y-4">
+                                                                {app.matchedKeywords && app.matchedKeywords.length > 0 && (
+                                                                    <div className="space-y-2">
+                                                                        <p className="text-[9px] font-black text-green-400 uppercase tracking-widest">Matched Requirements</p>
+                                                                        <div className="flex flex-wrap gap-1.5">
+                                                                            {app.matchedKeywords.slice(0, 6).map(skill => (
+                                                                                <span key={skill} className="px-2 py-0.5 bg-green-500/10 border border-green-500/20 text-[9px] font-black text-green-400 rounded-md uppercase tracking-tighter">
+                                                                                    {skill}
+                                                                                </span>
+                                                                            ))}
+                                                                        </div>
+                                                                    </div>
+                                                                )}
+                                                                <div className="space-y-2">
+                                                                    <p className="text-[9px] font-black text-red-400 uppercase tracking-widest">Gaps Identified</p>
+                                                                    <div className="flex flex-wrap gap-1.5">
+                                                                        {app.missingSkills.slice(0, 6).map(skill => (
+                                                                            <span key={skill} className="px-2 py-0.5 bg-red-500/10 border border-red-500/20 text-[9px] font-black text-red-400 rounded-md uppercase tracking-tighter">
+                                                                                {skill}
+                                                                            </span>
+                                                                        ))}
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         ) : (
                                                             <div className="space-y-2">
-                                                                <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Skills</p>
+                                                                <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Key Skills</p>
                                                                 <div className="flex flex-wrap gap-1.5">
                                                                     {(app.user.skills || []).slice(0, 6).map(skill => (
                                                                         <span key={skill} className="px-2 py-0.5 bg-white/5 border border-white/5 text-[9px] font-black text-gray-400 rounded-md uppercase tracking-tighter">
                                                                             {skill}
                                                                         </span>
                                                                     ))}
-                                                                    {(app.user.skills || []).length > 6 && <span className="text-[9px] font-black text-gray-600">+{app.user.skills.length - 6} more</span>}
                                                                 </div>
                                                             </div>
                                                         )}
@@ -675,6 +785,47 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                     </a>
                                 </div>
                             )}
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Custom Toast Notification */}
+            {toast && (
+                <div className={`fixed bottom-8 right-8 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-bottom-5 duration-300 z-50 ${toast.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
+                    <span className="text-2xl">{toast.type === 'success' ? '✅' : '❌'}</span>
+                    <span className="text-sm font-black tracking-widest uppercase">{toast.message}</span>
+                </div>
+            )}
+
+            {/* Delete Confirmation Modal */}
+            {jobToDelete && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-8 animate-in fade-in duration-200">
+                    <div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={() => setJobToDelete(null)}></div>
+                    <div className="relative w-full max-w-md bg-[#0A0A0A] border border-white/10 rounded-3xl shadow-2xl p-8 animate-in zoom-in-95 duration-300">
+                        <div className="text-center space-y-4">
+                            <div className="w-16 h-16 bg-red-500/10 border border-red-500/20 rounded-2xl flex items-center justify-center mx-auto mb-6 transform rotate-12">
+                                <span className="text-3xl filter grayscale contrast-200">🗑️</span>
+                            </div>
+                            <h3 className="text-2xl font-black text-white italic tracking-tighter">Remove Listing?</h3>
+                            <p className="text-sm text-gray-400 leading-relaxed font-black">
+                                This will permanently delete '<span className="text-white">{jobToDelete.title}</span>' and remove all associated candidate applications from this pool.
+                            </p>
+
+                            <div className="flex gap-4 pt-8">
+                                <button
+                                    onClick={() => setJobToDelete(null)}
+                                    className="flex-1 px-6 py-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white text-xs font-black uppercase tracking-widest rounded-2xl transition-all"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={confirmDelete}
+                                    className="flex-1 px-6 py-4 bg-red-500/20 hover:bg-red-500/30 border border-red-500/50 text-red-400 text-xs font-black uppercase tracking-widest rounded-2xl transition-all hover:tracking-[0.2em] shadow-[0_0_20px_rgba(239,68,68,0.2)]"
+                                >
+                                    Confirm
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>

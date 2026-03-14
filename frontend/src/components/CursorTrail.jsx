@@ -5,7 +5,12 @@ const CursorTrail = () => {
     const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
 
     useEffect(() => {
+        let lastUpdate = 0;
         const handleMouseMove = (e) => {
+            const now = Date.now();
+            if (now - lastUpdate < 30) return; // limit to ~30fps update rate
+            lastUpdate = now;
+
             setMousePos({ x: e.clientX, y: e.clientY });
 
             // Add new trail particle

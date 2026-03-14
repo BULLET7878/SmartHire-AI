@@ -3,14 +3,32 @@ const Application = require('../models/Application');
 
 const listAll = async (req, res) => {
     try {
-        const jobs = await Job.find().populate('postedBy', 'name email').sort({ createdAt: -1 });
-        const output = await Promise.all(
-            jobs.map(async (job) => {
-                const count = await Application.countDocuments({ job: job._id });
-                return { ...job.toObject(), applicantCount: count };
-            })
-        );
-        res.json(output);
+        const jobs = await Job.aggregate([
+            {
+                $lookup: {
+                    from: 'applications',
+                    localField: '_id',
+                    foreignField: 'job',
+                    as: 'applications'
+                }
+            },
+            {
+                $addFields: {
+                    applicantCount: { $size: "$applications" }
+                }
+            },
+            {
+                $project: {
+                    applications: 0 // Remove the large array from response
+                }
+            },
+            { $sort: { createdAt: -1 } }
+        ]);
+
+        // We need to populate postedBy since aggregate doesn't do it automatically like .find()
+        const populatedJobs = await Job.populate(jobs, { path: 'postedBy', select: 'name email' });
+
+        res.json(populatedJobs);
     } catch (err) {
         console.error("ListAll Error:", err);
         res.status(500).json({ message: "Search failed" });
@@ -19,14 +37,32 @@ const listAll = async (req, res) => {
 
 const listMine = async (req, res) => {
     try {
-        const jobs = await Job.find({ postedBy: req.user._id }).sort({ createdAt: -1 });
-        const output = await Promise.all(
-            jobs.map(async (job) => {
-                const count = await Application.countDocuments({ job: job._id });
-                return { ...job.toObject(), applicantCount: count };
-            })
-        );
-        res.json(output);
+        const jobs = await Job.aggregate([
+            {
+                $match: { postedBy: req.user._id }
+            },
+            {
+                $lookup: {
+                    from: 'applications',
+                    localField: '_id',
+                    foreignField: 'job',
+                    as: 'applications'
+                }
+            },
+            {
+                $addFields: {
+                    applicantCount: { $size: "$applications" }
+                }
+            },
+            {
+                $project: {
+                    applications: 0
+                }
+            },
+            { $sort: { createdAt: -1 } }
+        ]);
+
+        res.json(jobs);
     } catch (err) {
         console.error("ListMine Error:", err);
         res.status(500).json({ message: "Fetch failed" });
@@ -140,11 +176,58 @@ const remove = async (req, res) => {
     }
 };
 
+const reEvaluateAts = async (req, res) => {
+    try {
+        const target = await Job.findById(req.params.id);
+        if (!target) return res.status(404).json({ message: "Not found" });
+
+        if (target.postedBy.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ message: "Access denied" });
+        }
+
+        const applications = await Application.find({ job: target._id });
+        if (applications.length === 0) {
+            return res.json({ message: "No applications to re-evaluate" });
+        }
+
+        const Resume = require('../models/Resume');
+        const MatchResult = require('../models/MatchResult');
+        const { calculateMatchInsight } = require('../utils/geminiUtil');
+
+        // Re-evaluate in parallel for faster processing
+        await Promise.all(applications.map(async (app) => {
+            const resume = await Resume.findOne({ userId: app.user }).sort({ createdAt: -1 });
+            if (resume) {
+                const result = await calculateMatchInsight(resume, target.description || target.title);
+                if (result) {
+                    await MatchResult.findOneAndUpdate(
+                        { resumeId: resume._id, jobId: target._id },
+                        {
+                            score: result.score,
+                            subScores: result.subScores,
+                            justification: result.justification,
+                            missingSkills: result.missingSkills,
+                            status: result.score >= 75 ? 'Strong Match' : result.score >= 40 ? 'Medium Match' : 'Weak Match'
+                        },
+                        { upsert: true, new: true }
+                    );
+                }
+            }
+        }));
+
+        res.json({ message: "Re-evaluation complete" });
+    } catch (err) {
+        console.error("Re-evaluation Error:", err);
+        res.status(500).json({ message: "Re-evaluation failed" });
+    }
+};
+
 module.exports = {
     getJobs: listAll,
     getMyJobs: listMine,
     createJob: create,
     updateJob: update,
     deleteJob: remove,
-    toggleJobStatus: toggleStatus
+    toggleJobStatus: toggleStatus,
+    reEvaluateAts
 };

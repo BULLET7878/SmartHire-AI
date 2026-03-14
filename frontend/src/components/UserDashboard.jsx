@@ -18,6 +18,14 @@ const UserDashboard = () => {
     const [applying, setApplying] = useState(new Set());
     const [viewJd, setViewJd] = useState(null);
 
+    // Toast Notification State
+    const [toast, setToast] = useState(null);
+
+    const showToast = (message, type = 'success') => {
+        setToast({ message, type });
+        setTimeout(() => setToast(null), 4000); // Auto-dismiss after 4 seconds
+    };
+
     // Filter State
     const [filterType, setFilterType] = useState('All');
 
@@ -28,6 +36,22 @@ const UserDashboard = () => {
     const loadData = () => {
         loadJobs();
         loadApps();
+        loadProfile();
+    };
+
+    const loadProfile = async () => {
+        try {
+            const res = await api.get('/resume/mine');
+            if (res.data) {
+                setMySkills(res.data.skills || []);
+                setResumeMeta(res.data.metadata || null);
+            }
+        } catch (err) {
+            // 404 is expected if they haven't uploaded yet
+            if (err.response?.status !== 404) {
+                console.error("Profile load failed:", err);
+            }
+        }
     };
 
     const loadJobs = async () => {
@@ -55,6 +79,12 @@ const UserDashboard = () => {
 
     const handleUpload = async () => {
         if (!file) return;
+
+        setMsg('Initializing analysis...'); // Clear old messages and show status
+        setMySkills([]); // Clear old keywords instantly
+        setResumeMeta(null);
+        setScore(null);
+
         const data = new FormData();
         data.append('resume', file);
 
@@ -63,9 +93,26 @@ const UserDashboard = () => {
             const res = await api.post('/resume/upload', data);
             setMySkills(res.data.skills);
             setResumeMeta(res.data.metadata);
+
+            // Clear stale ATS match results from previous resume
+            setScore(null);
+            setActiveId(null);
+
+            // Refresh feed and apps to reflect new resume profile
+            loadJobs();
+            loadApps();
+
+            setFile(null); // Clear input
             setMsg('Analysis complete!');
+            setTimeout(() => setMsg(''), 4000);
         } catch (err) {
-            setMsg('Failed to process. Try again.');
+            console.error("Upload Error Details:", err.response?.data || err.message);
+            setMsg(err.response?.data?.message || 'Failed to process. Try again.');
+
+            // Clear profile preview on failure so user knows something is wrong
+            setMySkills([]);
+            setResumeMeta(null);
+            setScore(null);
         }
     };
 
@@ -87,7 +134,7 @@ const UserDashboard = () => {
         try {
             setApplying(prev => new Set(prev).add(id));
             await api.post(`/applications/${id}`);
-            alert('Application sent successfully!');
+            showToast('Application sent successfully!');
             loadApps(); // Refresh both history set and full list
         } catch (err) {
             console.error("Apply failed details:", {
@@ -97,8 +144,8 @@ const UserDashboard = () => {
                 response: err.response,
                 url: `/applications/${id}`
             });
-            // Alert specific error message from backend if available
-            alert(err.response?.data?.message || 'Application failed. Please check your connection.');
+            // Show specific error message from backend if available
+            showToast(err.response?.data?.message || 'Application failed. Please check your connection.', 'error');
         } finally {
             setApplying(prev => {
                 const next = new Set(prev);
@@ -164,6 +211,11 @@ const UserDashboard = () => {
                                                 }`}>
                                                 {(resumeMeta.hasExperience ? 25 : 0) + (resumeMeta.hasEducation ? 25 : 0) + (resumeMeta.hasProjects ? 25 : 0) + (mySkills.length >= 5 ? 25 : 0)}/100
                                             </span>
+                                            {resumeMeta.aiSummary?.includes('Basic analysis') && (
+                                                <div className="mt-1 px-2 py-0.5 bg-yellow-500/20 border border-yellow-500/30 rounded text-[9px] font-black text-yellow-400 uppercase tracking-widest">
+                                                    Basic Mode
+                                                </div>
+                                            )}
                                             {/* Progress Bar */}
                                             <div className="w-32 h-1 bg-white/10 rounded-full mt-2 overflow-hidden">
                                                 <div
@@ -298,6 +350,19 @@ const UserDashboard = () => {
                                                 <div className="flex items-center gap-4 mt-2">
                                                     <span className="text-blue-400 font-bold text-xs uppercase tracking-wide">👥 {row.applicantCount || 0} Applied</span>
                                                 </div>
+
+                                                {row.requiredSkills && row.requiredSkills.length > 0 && (
+                                                    <div className="mt-4 space-y-2">
+                                                        <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Required Skills</p>
+                                                        <div className="flex flex-wrap gap-2">
+                                                            {row.requiredSkills.map((skill, idx) => (
+                                                                <span key={idx} className="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-black text-gray-300 rounded-md uppercase tracking-tighter shadow-sm">
+                                                                    {skill}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
                                             </div>
                                         </div>
 
@@ -349,7 +414,7 @@ const UserDashboard = () => {
                                                         <p className={`text-[11px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-lg border inline-block ${score.status === 'Strong Match' ? 'bg-green-500/20 border-green-500/30 text-green-400' : score.status === 'Medium Match' ? 'bg-blue-500/20 border-blue-500/30 text-blue-400' : 'bg-red-500/20 border-red-500/30 text-red-400'}`}>
                                                             {score.status}
                                                         </p>
-                                                        <p className="text-[11px] font-black text-gray-500 uppercase tracking-[0.3em]">Compatibility Metric</p>
+                                                        <p className="text-[11px] font-black text-gray-500 uppercase tracking-[0.3em]">ATS Match Score</p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -358,35 +423,62 @@ const UserDashboard = () => {
                                                 <div className="space-y-4">
                                                     <p className="text-[11px] font-black text-green-400 uppercase tracking-widest">Strengths</p>
                                                     <div className="flex flex-wrap gap-2">
-                                                        {score.matchedSkills.map(s => (
-                                                            <span key={s} className="px-3 py-1.5 bg-green-400/10 text-green-300 text-[11px] font-black rounded-lg uppercase tracking-tighter">{s}</span>
+                                                        {score.matched_keywords && score.matched_keywords.map((s, idx) => (
+                                                            <span key={`matched-${idx}`} className="px-3 py-1.5 bg-green-400/10 text-green-300 text-[11px] font-black rounded-lg uppercase tracking-tighter">{s}</span>
                                                         ))}
-                                                        {score.matchedSkills.length === 0 && <span className="text-gray-600 italic text-xs">No direct hits</span>}
+                                                        {(!score.matched_keywords || score.matched_keywords.length === 0) && <span className="text-gray-600 italic text-xs">No direct hits</span>}
                                                     </div>
                                                 </div>
                                                 <div className="space-y-4">
                                                     <p className="text-[11px] font-black text-red-500 uppercase tracking-widest">Skill Gaps</p>
                                                     <div className="flex flex-wrap gap-2">
-                                                        {score.missingSkills.map(s => (
-                                                            <span key={s} className="px-3 py-1.5 bg-red-400/10 text-red-400 text-[11px] font-black rounded-lg uppercase tracking-tighter">{s}</span>
+                                                        {score.missingSkills && score.missingSkills.map((s, idx) => (
+                                                            <span key={`missing-${idx}`} className="px-3 py-1.5 bg-red-400/10 text-red-400 text-[11px] font-black rounded-lg uppercase tracking-tighter">{s}</span>
                                                         ))}
-                                                        {score.missingSkills.length === 0 && <span className="text-gray-600 italic text-xs">Perfect match</span>}
+                                                        {(!score.missingSkills || score.missingSkills.length === 0) && <span className="text-gray-600 italic text-xs">Perfect match</span>}
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            {/* AI Match Explainer / Advice */}
-                                            {score.missingSkills.length > 0 && (
-                                                <div className="mt-10 p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl animate-in zoom-in-95 duration-500">
-                                                    <div className="flex items-center gap-3 mb-4">
-                                                        <span className="text-xl">💡</span>
-                                                        <p className="text-[11px] font-black text-blue-400 uppercase tracking-widest">Growth Plan to 100%</p>
+                                            {/* ATS Breakdown Scores */}
+                                            {score.subScores && (
+                                                <div className="mt-8 grid grid-cols-4 gap-4">
+                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
+                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Formatting</p>
+                                                        <p className="text-lg font-black text-white">{score.subScores.formatting}%</p>
                                                     </div>
-                                                    <p className="text-sm text-gray-400 leading-relaxed">
-                                                        To increase your match score for this role by <span className="text-white font-bold">{Math.round((100 - score.score) / 2)}%</span>, consider highlighting your experience with <span className="text-blue-300 font-bold">{score.missingSkills.slice(0, 2).join(' and ')}</span> in your resume profile.
-                                                    </p>
+                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
+                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Experience</p>
+                                                        <p className="text-lg font-black text-white">{score.subScores.experience}%</p>
+                                                    </div>
+                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
+                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Keywords</p>
+                                                        <p className="text-lg font-black text-white">{score.subScores.keywordMatch || score.subScores.projects}%</p>
+                                                    </div>
+                                                    <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
+                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Education</p>
+                                                        <p className="text-lg font-black text-white">{score.subScores.education}%</p>
+                                                    </div>
                                                 </div>
                                             )}
+
+                                            {/* AI Match Explainer / Advice */}
+                                            <div className="mt-10 p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl animate-in zoom-in-95 duration-500">
+                                                <div className="flex items-center gap-3 mb-4">
+                                                    <span className="text-xl">💡</span>
+                                                    <p className="text-[11px] font-black text-blue-400 uppercase tracking-widest">Growth Plan to 100%</p>
+                                                </div>
+                                                <p className="text-sm text-gray-400 leading-relaxed mb-4">
+                                                    {score.justification}
+                                                </p>
+                                                {score.recommendations && score.recommendations.length > 0 && (
+                                                    <ul className="list-disc pl-5 space-y-2 text-xs text-white/70">
+                                                        {score.recommendations.map((rec, idx) => (
+                                                            <li key={idx}>{rec}</li>
+                                                        ))}
+                                                    </ul>
+                                                )}
+                                            </div>
                                         </div>
                                     )}
                                 </div>
@@ -438,8 +530,11 @@ const UserDashboard = () => {
                                                         {app.status}
                                                     </span>
                                                 </div>
-                                                <div className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[10px] font-black text-blue-400 italic">
-                                                    AI: {app.matchScore || 0}%
+                                                <div className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[10px] font-black italic flex items-center gap-2">
+                                                    <span className={`${app.matchScore >= 75 ? 'text-green-400' : app.matchScore >= 40 ? 'text-blue-400' : 'text-yellow-400'}`}>
+                                                        Match Score: {app.matchScore || 0}%
+                                                    </span>
+                                                    {app.matchStatus && <span className={`uppercase tracking-widest ${app.matchStatus === 'Strong Match' ? 'text-green-500' : app.matchStatus === 'Medium Match' ? 'text-blue-500' : 'text-gray-400'}`}>[{app.matchStatus}]</span>}
                                                 </div>
                                             </div>
 
@@ -457,6 +552,39 @@ const UserDashboard = () => {
                                                         </p>
                                                     </div>
                                                 </div>
+
+                                                {app.justification && (
+                                                    <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/10 rounded-xl">
+                                                        <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Match Justification</p>
+                                                        <p className="text-[11px] text-gray-300 leading-relaxed italic">"{app.justification}"</p>
+                                                    </div>
+                                                )}
+
+                                                {app.matchedKeywords && app.matchedKeywords.length > 0 && (
+                                                    <div className="mt-3 space-y-1">
+                                                        <p className="text-[9px] font-black text-green-400 uppercase tracking-widest">Matched Skills</p>
+                                                        <div className="flex flex-wrap gap-1">
+                                                            {app.matchedKeywords.slice(0, 5).map(skill => (
+                                                                <span key={skill} className="px-1.5 py-0.5 bg-green-500/10 border border-green-500/20 text-[9px] font-black text-green-400 rounded-md uppercase tracking-tighter">
+                                                                    {skill}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {app.missingSkills && app.missingSkills.length > 0 && (
+                                                    <div className="mt-2 space-y-1">
+                                                        <p className="text-[9px] font-black text-red-400 uppercase tracking-widest">Skill Gaps</p>
+                                                        <div className="flex flex-wrap gap-1">
+                                                            {app.missingSkills.slice(0, 5).map(skill => (
+                                                                <span key={skill} className="px-1.5 py-0.5 bg-red-500/10 border border-red-500/20 text-[9px] font-black text-red-400 rounded-md uppercase tracking-tighter">
+                                                                    {skill}
+                                                                </span>
+                                                            ))}
+                                                        </div>
+                                                    </div>
+                                                )}
 
                                                 <div className="flex items-center justify-between pt-4 border-t border-white/5">
                                                     <div className="space-y-1">
@@ -522,6 +650,14 @@ const UserDashboard = () => {
                             </object>
                         </div>
                     </div>
+                </div>
+            )}
+
+            {/* Custom Toast Notification */}
+            {toast && (
+                <div className={`fixed bottom-8 right-8 px-6 py-4 rounded-2xl shadow-2xl flex items-center gap-4 animate-in slide-in-from-bottom-5 duration-300 z-50 ${toast.type === 'success' ? 'bg-green-500/10 border border-green-500/20 text-green-400' : 'bg-red-500/10 border border-red-500/20 text-red-400'}`}>
+                    <span className="text-2xl">{toast.type === 'success' ? '✅' : '❌'}</span>
+                    <span className="text-sm font-black tracking-widest uppercase">{toast.message}</span>
                 </div>
             )}
         </div>
