@@ -1,10 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
+import LandingPage from './pages/LandingPage';
+import DemoPage from './pages/DemoPage';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import CursorTrail from './components/CursorTrail';
+import Footer from './components/Footer';
 
 function App() {
   return (
@@ -26,12 +28,14 @@ function App() {
         {/* Content wrapper with top padding to prevent hiding under sticky navbar */}
         <div className="flex-1">
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/demo" element={<DemoPage />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route path="/dashboard" element={<Dashboard />} />
           </Routes>
         </div>
+        <Footer />
       </div>
 
       {/* Global cursor trail effect */}

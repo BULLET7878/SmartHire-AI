@@ -26,6 +26,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
     // ATS Filters
     const [filterMatch, setFilterMatch] = useState(0);
     const [filterSkill, setFilterSkill] = useState('');
+    const [filterExperience, setFilterExperience] = useState('All');
     const [filterSort, setFilterSort] = useState('match'); // 'match', 'date'
 
     // Resume Viewer
@@ -217,22 +218,22 @@ const RecruiterDashboard = ({ onJobCreated }) => {
             {/* Hiring Pulse */}
             {pulse && (
                 <section className="animate-in fade-in zoom-in duration-1000">
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-                        <div className="card bg-blue-500/5 border-blue-500/10 flex flex-col items-center justify-center p-8 text-center group hover:bg-blue-500/10 transition-all">
-                            <span className="text-4xl font-black text-blue-400 mb-2">{pulse.totalJobs}</span>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Active Postings</p>
+                    <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
+                        <div className="card bg-blue-500/5 border-blue-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-blue-500/10 transition-all">
+                            <span className="text-3xl md:text-4xl font-black text-blue-400 mb-2">{pulse.totalJobs}</span>
+                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Active Postings</p>
                         </div>
-                        <div className="card bg-purple-500/5 border-purple-500/10 flex flex-col items-center justify-center p-8 text-center group hover:bg-purple-500/10 transition-all">
-                            <span className="text-4xl font-black text-purple-400 mb-2">{pulse.totalApplied}</span>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Total Applicants</p>
+                        <div className="card bg-purple-500/5 border-purple-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-purple-500/10 transition-all">
+                            <span className="text-3xl md:text-4xl font-black text-purple-400 mb-2">{pulse.totalApplied}</span>
+                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Total Applicants</p>
                         </div>
-                        <div className="card bg-green-500/5 border-green-500/10 flex flex-col items-center justify-center p-8 text-center group hover:bg-green-500/10 transition-all">
-                            <span className="text-4xl font-black text-green-400 mb-2">{pulse.shortlisted}</span>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Shortlisted</p>
+                        <div className="card bg-green-500/5 border-green-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-green-500/10 transition-all">
+                            <span className="text-3xl md:text-4xl font-black text-green-400 mb-2">{pulse.averageScore || 0}%</span>
+                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Avg Candidate Score</p>
                         </div>
-                        <div className="card bg-red-500/5 border-red-500/10 flex flex-col items-center justify-center p-8 text-center group hover:bg-red-500/10 transition-all">
-                            <span className="text-4xl font-black text-red-400 mb-2">{pulse.rejected}</span>
-                            <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Closed Signals</p>
+                        <div className="card bg-yellow-500/5 border-yellow-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-yellow-500/10 transition-all">
+                            <span className="text-3xl md:text-4xl font-black text-yellow-400 mb-2">{pulse.topCandidates || 0}</span>
+                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Top Performers (80%+)</p>
                         </div>
                     </div>
 
@@ -500,6 +501,14 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                     <input type="text" placeholder="Filter by skill..." value={filterSkill} onChange={(e) => setFilterSkill(e.target.value)} className="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white hover:border-blue-500/50 transition-all outline-none w-32" />
                                 </div>
                                 <div className="flex flex-col gap-1">
+                                    <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Experience</label>
+                                    <select value={filterExperience} onChange={(e) => setFilterExperience(e.target.value)} className="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white hover:border-blue-500/50 transition-all outline-none">
+                                        <option className="bg-slate-900" value="All">All Exp</option>
+                                        <option className="bg-slate-900" value="Required">Has Experience</option>
+                                        <option className="bg-slate-900" value="Fresh">Freshers</option>
+                                    </select>
+                                </div>
+                                <div className="flex flex-col gap-1">
                                     <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Sort By</label>
                                     <select value={filterSort} onChange={(e) => setFilterSort(e.target.value)} className="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white hover:border-blue-500/50 transition-all outline-none">
                                         <option className="bg-slate-900" value="match">Match Score</option>
@@ -527,7 +536,15 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                     .filter(app => {
                                         const matchesScore = app.matchScore >= filterMatch;
                                         const matchesSkill = !filterSkill || (app.user.skills && app.user.skills.some(s => s.toLowerCase().includes(filterSkill.toLowerCase())));
-                                        return matchesScore && matchesSkill;
+                                        
+                                        let matchesExp = true;
+                                        if (filterExperience === 'Required') {
+                                            matchesExp = app.resumeMeta?.hasExperience === true;
+                                        } else if (filterExperience === 'Fresh') {
+                                            matchesExp = app.resumeMeta?.hasExperience === false;
+                                        }
+
+                                        return matchesScore && matchesSkill && matchesExp;
                                     })
                                     .sort((a, b) => {
                                         if (filterSort === 'date') return new Date(b.appliedAt) - new Date(a.appliedAt);
@@ -699,11 +716,13 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                                 className={`bg-transparent text-xs font-black uppercase tracking-tighter cursor-pointer focus:outline-none ${app.status === 'Accepted' ? 'text-green-400' :
                                                                     app.status === 'Rejected' ? 'text-red-400' :
                                                                         app.status === 'Shortlisted' ? 'text-purple-400' :
-                                                                            'text-blue-400'
+                                                                            app.status === 'Interviewed' ? 'text-yellow-400' :
+                                                                                'text-blue-400'
                                                                     }`}
                                                             >
                                                                 <option className="bg-slate-900" value="Applied">Applied</option>
                                                                 <option className="bg-slate-900" value="Shortlisted">Shortlisted</option>
+                                                                <option className="bg-slate-900" value="Interviewed">Mark for Interview</option>
                                                                 <option className="bg-slate-900" value="Review Later">Review Later</option>
                                                                 <option className="bg-slate-900" value="Rejected">Rejected</option>
                                                             </select>
@@ -739,7 +758,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                             <h3 className="text-sm font-black text-white uppercase tracking-widest">Candidate Resume</h3>
                             <div className="flex items-center gap-4">
                                 <a
-                                    href={`/uploads/${viewResume}`}
+                                    href={`/uploads/${viewResume}?token=${localStorage.getItem('token')}`}
                                     download
                                     className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
                                 >
@@ -756,14 +775,14 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                         <div className="flex-1 bg-[#1a1a1a] p-1 relative">
                             {!viewResume.toLowerCase().endsWith('.docx') ? (
                                 <object
-                                    data={`/uploads/${viewResume}#toolbar=0&navpanes=0&scrollbar=0`}
+                                    data={`/uploads/${viewResume}?token=${localStorage.getItem('token')}#toolbar=0&navpanes=0&scrollbar=0`}
                                     type="application/pdf"
                                     className="w-full h-full rounded-xl border border-white/5"
                                 >
                                     <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-4">
                                         <p>Browser unable to embed PDF natively.</p>
                                         <a
-                                            href={`/uploads/${viewResume}`}
+                                            href={`/uploads/${viewResume}?token=${localStorage.getItem('token')}`}
                                             target="_blank"
                                             rel="noreferrer"
                                             className="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold"
@@ -777,7 +796,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                     <p className="text-xl font-bold">Preview not available for this file type.</p>
                                     <p className="text-sm">Please download to view.</p>
                                     <a
-                                        href={`/uploads/${viewResume}`}
+                                        href={`/uploads/${viewResume}?token=${localStorage.getItem('token')}`}
                                         download
                                         className="px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl font-bold uppercase tracking-widest transition-all"
                                     >

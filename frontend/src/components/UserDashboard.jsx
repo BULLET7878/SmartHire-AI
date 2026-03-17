@@ -15,6 +15,7 @@ const UserDashboard = () => {
     const [activeId, setActiveId] = useState(null);
     const [history, setHistory] = useState(new Set());
     const [myApps, setMyApps] = useState([]);
+    const [appSummary, setAppSummary] = useState(null);
     const [applying, setApplying] = useState(new Set());
     const [viewJd, setViewJd] = useState(null);
 
@@ -69,8 +70,10 @@ const UserDashboard = () => {
     const loadApps = async () => {
         try {
             const res = await api.get('/applications/my');
-            setMyApps(res.data);
-            const appliedIds = new Set(res.data.map(app => app.job?._id).filter(Boolean));
+            setMyApps(res.data.applications || res.data);
+            setAppSummary(res.data.summary || null);
+            const appsList = res.data.applications || res.data;
+            const appliedIds = new Set(appsList.map(app => app.job?._id).filter(Boolean));
             setHistory(appliedIds);
         } catch (err) {
             console.error("App load failed:", err);
@@ -80,8 +83,8 @@ const UserDashboard = () => {
     const handleUpload = async () => {
         if (!file) return;
 
-        setMsg('Initializing analysis...'); // Clear old messages and show status
-        setMySkills([]); // Clear old keywords instantly
+        setMsg('Initializing analysis...');
+        setMySkills([]);
         setResumeMeta(null);
         setScore(null);
 
@@ -94,22 +97,22 @@ const UserDashboard = () => {
             setMySkills(res.data.skills);
             setResumeMeta(res.data.metadata);
 
-            // Clear stale ATS match results from previous resume
+            // Clear stale match results
             setScore(null);
             setActiveId(null);
 
-            // Refresh feed and apps to reflect new resume profile
+            // Refresh user feed
             loadJobs();
             loadApps();
 
-            setFile(null); // Clear input
+            setFile(null);
             setMsg('Analysis complete!');
             setTimeout(() => setMsg(''), 4000);
         } catch (err) {
             console.error("Upload Error Details:", err.response?.data || err.message);
             setMsg(err.response?.data?.message || 'Failed to process. Try again.');
 
-            // Clear profile preview on failure so user knows something is wrong
+            // Reset on failure
             setMySkills([]);
             setResumeMeta(null);
             setScore(null);
@@ -135,7 +138,7 @@ const UserDashboard = () => {
             setApplying(prev => new Set(prev).add(id));
             await api.post(`/applications/${id}`);
             showToast('Application sent successfully!');
-            loadApps(); // Refresh both history set and full list
+            loadApps();
         } catch (err) {
             console.error("Apply failed details:", {
                 id,
@@ -144,7 +147,7 @@ const UserDashboard = () => {
                 response: err.response,
                 url: `/applications/${id}`
             });
-            // Show specific error message from backend if available
+            // Backend error message matching
             showToast(err.response?.data?.message || 'Application failed. Please check your connection.', 'error');
         } finally {
             setApplying(prev => {
@@ -263,19 +266,23 @@ const UserDashboard = () => {
             </section>
 
             {/* Stats Overview Portal */}
-            {myApps.length > 0 && (
-                <section className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-in fade-in zoom-in duration-700">
-                    <div className="card bg-blue-500/5 border-blue-500/10 flex flex-col items-center justify-center p-8 text-center group hover:bg-blue-500/10 transition-all">
-                        <span className="text-4xl font-black text-blue-400 mb-2">{myApps.length}</span>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Total Signals Sent</p>
+            {(myApps.length > 0 || appSummary) && (
+                <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 animate-in fade-in zoom-in duration-700">
+                    <div className="card bg-blue-500/5 border-blue-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-blue-500/10 transition-all">
+                        <span className="text-3xl md:text-4xl font-black text-blue-400 mb-2">{appSummary?.totalApplications || myApps.length}</span>
+                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Applied</p>
                     </div>
-                    <div className="card bg-purple-500/5 border-purple-500/10 flex flex-col items-center justify-center p-8 text-center group hover:bg-purple-500/10 transition-all">
-                        <span className="text-4xl font-black text-purple-400 mb-2">{new Set(myApps.map(a => a.job?.company)).size}</span>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Companies Applied</p>
+                    <div className="card bg-purple-500/5 border-purple-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-purple-500/10 transition-all">
+                        <span className="text-3xl md:text-4xl font-black text-purple-400 mb-2">{appSummary?.averageScore || 0}%</span>
+                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Avg ATS Score</p>
                     </div>
-                    <div className="card bg-green-500/5 border-green-500/10 flex flex-col items-center justify-center p-8 text-center group hover:bg-green-500/10 transition-all">
-                        <span className="text-4xl font-black text-green-400 mb-2">{myApps.filter(a => ['Applied', 'Reviewed'].includes(a.status)).length}</span>
-                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Active Progressions</p>
+                    <div className="card bg-green-500/5 border-green-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-green-500/10 transition-all">
+                        <span className="text-3xl md:text-4xl font-black text-green-400 mb-2">{appSummary?.shortlistedCount || myApps.filter(a => ['Shortlisted', 'Interviewed'].includes(a.status)).length}</span>
+                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Shortlisted</p>
+                    </div>
+                    <div className="card bg-yellow-500/5 border-yellow-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-yellow-500/10 transition-all">
+                        <span className="text-3xl md:text-4xl font-black text-yellow-400 mb-2">{appSummary?.profileStrength || (mySkills.length > 0 ? 75 : 0)}%</span>
+                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Profile Strength</p>
                     </div>
                 </section>
             )}
@@ -485,8 +492,11 @@ const UserDashboard = () => {
                             ))}
 
                         {!busy && items.length === 0 && (
-                            <div className="py-40 text-center opacity-30 border-2 border-dashed border-white/5 rounded-[40px]">
-                                <p className="text-2xl font-black italic">Nothing New Found</p>
+                            <div className="py-32 text-center border-2 border-dashed border-white/5 rounded-[40px] flex flex-col items-center justify-center space-y-4">
+                                <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-3xl mb-2">🔍</div>
+                                <p className="text-xl font-black text-white tracking-tighter">No Job Matches Yet</p>
+                                <p className="text-gray-500 text-sm max-w-sm">We couldn't find any relevant positions matching your parsed skills.</p>
+                                <a href="/demo" className="mt-4 px-6 py-2 bg-blue-500/10 text-blue-400 hover:bg-blue-500/20 rounded-xl text-xs font-black uppercase tracking-widest transition-all">Try Demo</a>
                             </div>
                         )}
                     </div>
@@ -616,7 +626,7 @@ const UserDashboard = () => {
                             <h3 className="text-sm font-black text-white uppercase tracking-widest">Job Description Details</h3>
                             <div className="flex items-center gap-4">
                                 <a
-                                    href={`/uploads/${viewJd}`}
+                                    href={`/uploads/${viewJd}?token=${localStorage.getItem('token')}`}
                                     download
                                     className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
                                 >
@@ -632,14 +642,14 @@ const UserDashboard = () => {
                         </div>
                         <div className="flex-1 bg-[#1a1a1a] p-1 relative">
                             <object
-                                data={`/uploads/${viewJd}#toolbar=0&navpanes=0&scrollbar=0`}
+                                data={`/uploads/${viewJd}?token=${localStorage.getItem('token')}#toolbar=0&navpanes=0&scrollbar=0`}
                                 type="application/pdf"
                                 className="w-full h-full rounded-xl border border-white/5"
                             >
                                 <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-4">
                                     <p>Browser unable to embed PDF natively.</p>
                                     <a
-                                        href={`/uploads/${viewJd}`}
+                                        href={`/uploads/${viewJd}?token=${localStorage.getItem('token')}`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold"

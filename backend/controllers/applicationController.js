@@ -25,7 +25,7 @@ const applyToJob = async (req, res) => {
         // Get user's resume path from their profile (if available)
         const resumeUrl = req.user.resumePath || '';
 
-        // --- AUTOMATIC MATCHING LOGIC ---
+        // Auto-match against job description
         try {
             const Resume = require('../models/Resume');
             const MatchResult = require('../models/MatchResult');
@@ -101,13 +101,12 @@ const getJobApplications = async (req, res) => {
 
         const validApplications = applications.filter(app => app.user);
 
-        // BULK FETCH Resumes
+        // Fetch candidate resumes
         const userIds = validApplications.map(app => app.user._id);
         const Resume = require('../models/Resume');
         const MatchResult = require('../models/MatchResult');
 
-        // We fetch the latest resume per user using aggregation or simple find + group in mem
-        const allResumes = await Resume.find({ userId: { $in: userIds } }).sort({ createdAt: -1 });
+        // Map user ID to their latest resume
         const resumeMap = {}; // userId -> latest Resume
         const resumeIds = [];
 
@@ -118,7 +117,7 @@ const getJobApplications = async (req, res) => {
             }
         });
 
-        // BULK FETCH Matches
+        // Fetch ATS match results
         const allMatches = await MatchResult.find({ resumeId: { $in: resumeIds }, jobId: jobId });
         const matchMap = {}; // resumeId -> MatchResult
         allMatches.forEach(m => {
@@ -151,7 +150,7 @@ const getJobApplications = async (req, res) => {
             return data;
         });
 
-        // Rank by match score (highest first) - Automatic Ranking
+        // Rank by highest match score
         const ranked = enrichedApplications.sort((a, b) => b.matchScore - a.matchScore);
 
         res.json(ranked);
@@ -204,7 +203,33 @@ const getMyApplications = async (req, res) => {
             return data;
         });
 
-        res.json(output);
+        // Generate summary statistics
+        const totalApplications = output.length;
+        const validScores = output.map(app => app.matchScore).filter(score => score && score > 0);
+        const averageScore = validScores.length > 0 
+            ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length) 
+            : 0;
+        
+        const shortlistedCount = output.filter(app => ['Shortlisted', 'Interviewed', 'Accepted'].includes(app.status)).length;
+
+        // Calculate profile strength estimation
+        let profileStrength = 0;
+        if (resume) {
+            if (resume.metadata?.hasExperience) profileStrength += 25;
+            if (resume.metadata?.hasEducation) profileStrength += 25;
+            if (resume.metadata?.hasProjects) profileStrength += 25;
+            if (resume.skills && resume.skills.length >= 5) profileStrength += 25;
+        }
+
+        res.json({
+            applications: output,
+            summary: {
+                totalApplications,
+                averageScore,
+                shortlistedCount,
+                profileStrength
+            }
+        });
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
@@ -270,6 +295,14 @@ const getPulse = async (req, res) => {
             }
         ]);
 
+        // Get resumes to match and calculate average score
+        const MatchResult = require('../models/MatchResult');
+        const matches = await MatchResult.find({ jobId: { $in: jobIds } });
+        
+        const validScores = matches.map(m => m.score).filter(s => s > 0);
+        const averageScore = validScores.length > 0 ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length) : 0;
+        const topCandidates = validScores.filter(s => s >= 80).length;
+
         let totalApplied = 0;
         let shortlisted = 0;
         let rejected = 0;
@@ -277,8 +310,8 @@ const getPulse = async (req, res) => {
 
         stats.forEach(stat => {
             totalApplied += stat.count;
-            if (stat._id === 'Shortlisted') shortlisted = stat.count;
-            if (stat._id === 'Rejected') rejected = stat.count;
+            if (['Shortlisted', 'Interviewed', 'Accepted'].includes(stat._id)) shortlisted += stat.count;
+            if (stat._id === 'Rejected') rejected += stat.count;
             if (['Reviewed', 'Review Later'].includes(stat._id)) reviewed += stat.count;
         });
 
@@ -287,7 +320,9 @@ const getPulse = async (req, res) => {
             shortlisted,
             rejected,
             reviewed,
-            totalJobs: jobs.length
+            totalJobs: jobs.length,
+            averageScore,
+            topCandidates
         });
     } catch (error) {
         res.status(500).json({ message: error.message });

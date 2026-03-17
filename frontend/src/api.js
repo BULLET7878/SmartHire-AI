@@ -13,4 +13,9 @@ api.interceptors.request.use((config) => {
     return config;
 });
 
+export const analyzeDemoRequest = async (data) => {
+    const response = await api.post('/demo/analyze', data);
+    return response.data;
+};
+
 export default api;

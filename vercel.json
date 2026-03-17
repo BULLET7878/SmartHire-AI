@@ -15,12 +15,20 @@
     ],
     "rewrites": [
         {
-            "source": "/api/(.*)",
+            "source": "/api/:match*",
             "destination": "backend/server.js"
         },
         {
+            "source": "/assets/:match*",
+            "destination": "/frontend/assets/:match*"
+        },
+        {
+            "source": "/:file([^/]*\\.[^/]*)",
+            "destination": "/frontend/:file"
+        },
+        {
             "source": "/(.*)",
-            "destination": "/frontend/$1"
+            "destination": "/frontend/index.html"
         }
     ]
 }
