@@ -1,15 +1,19 @@
 {
     "buildCommand": "cd frontend && npm install && npm run build",
     "outputDirectory": "frontend/dist",
-    "installCommand": "echo 'skip root install'",
-    "rewrites": [
+    "installCommand": "echo skip",
+    "routes": [
         {
-            "source": "/api/:path*",
-            "destination": "https://smarthire-api-production.up.railway.app/api/:path*"
+            "src": "/api/(.*)",
+            "dest": "https://smarthire-api-production.up.railway.app/api/$1"
         },
         {
-            "source": "/(.*)",
-            "destination": "/index.html"
+            "src": "/assets/(.*)",
+            "dest": "/assets/$1"
+        },
+        {
+            "src": "/(.*)",
+            "dest": "/index.html"
         }
     ]
 }
