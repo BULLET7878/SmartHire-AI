@@ -21,3 +21,4 @@ backend/uploads/*
 # IDE files
 .vscode/
 .idea/
+node_modules
