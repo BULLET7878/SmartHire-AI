@@ -171,7 +171,7 @@ async function analyzeResume(text) {
         ]);
 
         const response = await result.response;
-        let jsonText = response.text().replace(/```json | ```/g, "").trim();
+        let jsonText = response.text().replace(/```json|```/gi, "").trim();
         const parsed = JSON.parse(jsonText);
 
         // Flatten skills object to array
@@ -382,7 +382,7 @@ Return pure JSON only.
         ]);
 
         const response = await result.response;
-        let jsonText = response.text().replace(/```json | ```/gi, "").trim();
+        let jsonText = response.text().replace(/```json|```/gi, "").trim();
         const parsedData = JSON.parse(jsonText);
 
         // Map to expected frontend structure to avoid breaking UI components
