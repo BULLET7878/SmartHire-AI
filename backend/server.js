@@ -8,7 +8,7 @@ const connectDB = require('./config/db');
 dotenv.config();
 
 // ── Startup Environment Validation ──────────────────────────────────────────
-const REQUIRED_ENV_VARS = ['MONGODB_URI', 'JWT_SECRET', 'GEMINI_API_KEY'];
+const REQUIRED_ENV_VARS = ['MONGO_URI', 'JWT_SECRET', 'GEMINI_API_KEY'];
 const missingVars = REQUIRED_ENV_VARS.filter(v => !process.env[v]);
 if (missingVars.length > 0) {
     console.error('❌ MISSING REQUIRED ENVIRONMENT VARIABLES:', missingVars.join(', '));
