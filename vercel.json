@@ -1,34 +1,12 @@
 {
-    "version": 2,
-    "builds": [
-        {
-            "src": "backend/server.js",
-            "use": "@vercel/node"
-        },
-        {
-            "src": "frontend/package.json",
-            "use": "@vercel/static-build",
-            "config": {
-                "distDir": "dist"
-            }
-        }
-    ],
     "rewrites": [
         {
-            "source": "/api/:match*",
-            "destination": "backend/server.js"
-        },
-        {
-            "source": "/assets/:match*",
-            "destination": "/frontend/assets/:match*"
-        },
-        {
-            "source": "/:file([^/]*\\.[^/]*)",
-            "destination": "/frontend/:file"
+            "source": "/api/:path*",
+            "destination": "https://smarthire-api-production.up.railway.app/api/:path*"
         },
         {
             "source": "/(.*)",
-            "destination": "/frontend/index.html"
+            "destination": "/index.html"
         }
     ]
 }
