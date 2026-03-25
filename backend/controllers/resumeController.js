@@ -2,7 +2,6 @@ const Resume = require('../models/Resume');
 const User = require('../models/User');
 const pdf = require('pdf-parse');
 const mammoth = require('mammoth');
-const fs = require('fs');
 const { analyzeResume, getEmbeddings } = require('../utils/geminiUtil');
 
 const handleUpload = async (req, res) => {
@@ -15,8 +14,9 @@ const handleUpload = async (req, res) => {
 
     try {
         let text = "";
-        const buffer = fs.readFileSync(req.file.path);
-        console.log(`Starting extraction for ${req.file.originalname} (${req.file.size} bytes)...`);
+        // Use in-memory buffer (multer memoryStorage) - no disk I/O needed
+        const buffer = req.file.buffer;
+        console.log(`Starting extraction for ${req.file.originalname} (${buffer.length} bytes)...`);
 
         try {
             if (req.file.originalname.toLowerCase().endsWith('.pdf')) {
@@ -27,7 +27,7 @@ const handleUpload = async (req, res) => {
                     console.log("PDF parsed successfully.");
                 } catch (pdfErr) {
                     console.error("pdf-parse failed, falling back to buffer string:", pdfErr.message);
-                    text = buffer.toString('utf8'); // Fallback for low-quality/dummy PDFs
+                    text = buffer.toString('utf8');
                 }
             } else if (req.file.originalname.toLowerCase().endsWith('.docx')) {
                 const result = await mammoth.extractRawText({ buffer });
@@ -51,9 +51,6 @@ const handleUpload = async (req, res) => {
 
         if (!aiData || aiData.isResume === false) {
             console.warn(`Upload Blocked: ${aiData?.reason || "Document is not a valid resume/CV."}`);
-            if (req.file && fs.existsSync(req.file.path)) {
-                fs.unlinkSync(req.file.path);
-            }
             return res.status(400).json({
                 message: aiData?.reason || "This document does not look like a resume. Please upload a valid Resume/CV."
             });
@@ -63,48 +60,39 @@ const handleUpload = async (req, res) => {
         const embeddings = await getEmbeddings(text);
         console.log("Embeddings generated:", embeddings ? "SUCCESS" : "FAILED");
 
-        try {
-            // Update user profile link
-            console.log("Updating User resumePath...");
-            await User.findByIdAndUpdate(req.user._id, {
-                resumePath: req.file.filename
-            });
+        // Store original filename since we don't persist to disk in serverless
+        await User.findByIdAndUpdate(req.user._id, {
+            resumePath: req.file.originalname
+        });
 
-            const filter = { userId: req.user._id };
-            const update = {
-                rawText: text,
-                aiSummary: aiData.summary || "No summary provided",
-                skills: aiData.skills || [],
-                experience: aiData.experience || [],
-                education: aiData.education || [],
-                projects: aiData.projects || [],
-                embeddings: embeddings || [],
-                metadata: {
-                    hasExperience: !!(aiData.experience && aiData.experience.length > 0),
-                    hasEducation: !!(aiData.education && aiData.education.length > 0),
-                    hasProjects: !!(aiData.projects && aiData.projects.length > 0),
-                    experienceKeywords: (text.match(/years|months/gi) || []).length
-                }
-            };
+        const filter = { userId: req.user._id };
+        const update = {
+            rawText: text,
+            aiSummary: aiData.summary || "No summary provided",
+            skills: aiData.skills || [],
+            experience: aiData.experience || [],
+            education: aiData.education || [],
+            projects: aiData.projects || [],
+            embeddings: embeddings || [],
+            metadata: {
+                hasExperience: !!(aiData.experience && aiData.experience.length > 0),
+                hasEducation: !!(aiData.education && aiData.education.length > 0),
+                hasProjects: !!(aiData.projects && aiData.projects.length > 0),
+                experienceKeywords: (text.match(/years|months/gi) || []).length
+            }
+        };
 
-            console.log("Saving/Updating Resume record in DB...");
-            let doc = await Resume.findOneAndUpdate(filter, update, {
-                new: true,
-                upsert: true,
-                runValidators: true
-            });
-            console.log("Resume record saved successfully ID:", doc._id);
-            res.status(201).json(doc);
-        } catch (dbErr) {
-            console.error("Database Persistence Error:", dbErr);
-            throw dbErr; // Re-throw to be caught by main catch block
-        }
+        console.log("Saving/Updating Resume record in DB...");
+        const doc = await Resume.findOneAndUpdate(filter, update, {
+            new: true,
+            upsert: true,
+            runValidators: true
+        });
+        console.log("Resume record saved successfully ID:", doc._id);
+        res.status(201).json(doc);
     } catch (err) {
         console.error("CRITICAL Resume Processing Error:", err.message);
         console.error(err.stack);
-        if (req.file && fs.existsSync(req.file.path)) {
-            fs.unlinkSync(req.file.path);
-        }
         res.status(500).json({ message: "Analysis failed" });
     }
 };
