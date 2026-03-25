@@ -19,7 +19,7 @@ const HowItWorksSection = () => {
 
     return (
         <section className="py-24 px-6 max-w-7xl mx-auto relative">
-            <div className="text-center space-y-4 mb-20">
+            <div className="text-center space-y-4 mb-20 scroll-reveal">
                 <h2 className="heading-lg">How It Works</h2>
             </div>
             
@@ -28,7 +28,7 @@ const HowItWorksSection = () => {
                 <div className="hidden md:block absolute top-[20%] left-[10%] right-[10%] h-[1px] bg-white/20 z-0"></div>
 
                 {steps.map((step, idx) => (
-                    <div key={idx} className="relative z-10 flex flex-col items-center text-center space-y-4">
+                    <div key={idx} className={`scroll-reveal delay-${(idx + 1) * 100} relative z-10 flex flex-col items-center text-center space-y-4`}>
                         <div className="w-16 h-16 rounded-full glass flex items-center justify-center text-2xl font-bold">
                             {step.number}
                         </div>

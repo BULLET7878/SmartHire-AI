@@ -13,16 +13,25 @@ const LandingPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Optional: If user is already logged in, you might want to redirect them to dashboard,
-        // but it's okay for them to see the landing page too.
-        // Uncomment below to auto-redirect logged in users to dashboard from the root path.
-        /*
-        const token = localStorage.getItem('token');
-        const user = localStorage.getItem('user');
-        if (token && user) {
-            navigate('/dashboard');
-        }
-        */
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                    } else {
+                        entry.target.classList.remove('revealed');
+                    }
+                });
+            },
+            { threshold: 0.12, rootMargin: '0px 0px -40px 0px' }
+        );
+
+        const els = document.querySelectorAll(
+            '.scroll-reveal, .scroll-reveal-left, .scroll-reveal-right, .scroll-reveal-scale'
+        );
+        els.forEach((el) => observer.observe(el));
+
+        return () => observer.disconnect();
     }, [navigate]);
 
     return (

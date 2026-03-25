@@ -2,12 +2,12 @@ const PreviewSection = () => {
     return (
         <section className="py-24 px-6 w-full flex justify-center">
             <div className="max-w-4xl w-full">
-                <div className="text-center space-y-4 mb-16">
+                <div className="text-center space-y-4 mb-16 scroll-reveal">
                     <h2 className="heading-lg">Platform Preview</h2>
                     <p className="text-gray-400">See what our AI identifies from a standard software engineering resume.</p>
                 </div>
 
-                <div className="glass rounded-3xl p-8 relative overflow-hidden">
+                <div className="glass rounded-3xl p-8 relative overflow-hidden scroll-reveal-scale">
                     {/* Decorative Background Glows */}
                     <div className="absolute top-0 right-0 w-64 h-64 bg-blue-500/10 rounded-full blur-3xl"></div>
                     <div className="absolute bottom-0 left-0 w-64 h-64 bg-purple-500/10 rounded-full blur-3xl"></div>

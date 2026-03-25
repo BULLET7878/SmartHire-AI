@@ -22,14 +22,14 @@ const UseCasesSection = () => {
 
     return (
         <section className="py-24 px-6 max-w-7xl mx-auto w-full">
-            <div className="text-center space-y-4 mb-16">
+            <div className="text-center space-y-4 mb-16 scroll-reveal">
                 <h2 className="heading-lg">Who is it for?</h2>
                 <p className="text-gray-400 max-w-2xl mx-auto">Tailored solutions for every stage of the hiring process.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {cases.map((item, idx) => (
-                    <div key={idx} className="card bg-white/5 border border-white/5 p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 group">
+                    <div key={idx} className={`scroll-reveal delay-${(idx + 1) * 100} card bg-white/5 border border-white/5 p-8 rounded-3xl hover:-translate-y-2 transition-transform duration-300 group`}>
                         <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform bg-gradient-to-br from-white/10 to-transparent border border-white/10 shadow-lg">
                             {item.icon}
                         </div>

@@ -158,6 +158,62 @@
     .animate-indicator-pulse {
         animation: indicator-pulse 3s ease-in-out infinite;
     }
+
+    /* Scroll reveal animations */
+    @keyframes reveal-up {
+        0% { opacity: 0; transform: translateY(48px) scale(0.97); }
+        100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    @keyframes reveal-left {
+        0% { opacity: 0; transform: translateX(-48px) rotateY(8deg); }
+        100% { opacity: 1; transform: translateX(0) rotateY(0deg); }
+    }
+
+    @keyframes reveal-right {
+        0% { opacity: 0; transform: translateX(48px) rotateY(-8deg); }
+        100% { opacity: 1; transform: translateX(0) rotateY(0deg); }
+    }
+
+    @keyframes reveal-scale {
+        0% { opacity: 0; transform: scale(0.88) translateY(24px); }
+        100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    .scroll-reveal {
+        opacity: 0;
+        will-change: transform, opacity;
+    }
+
+    .scroll-reveal.revealed {
+        animation: reveal-up 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .scroll-reveal-left.revealed {
+        animation: reveal-left 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .scroll-reveal-right.revealed {
+        animation: reveal-right 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .scroll-reveal-scale.revealed {
+        animation: reveal-scale 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+
+    .scroll-reveal-left,
+    .scroll-reveal-right,
+    .scroll-reveal-scale {
+        opacity: 0;
+        will-change: transform, opacity;
+    }
+
+    /* Stagger delay helpers */
+    .delay-100 { animation-delay: 0.1s !important; }
+    .delay-200 { animation-delay: 0.2s !important; }
+    .delay-300 { animation-delay: 0.3s !important; }
+    .delay-400 { animation-delay: 0.4s !important; }
+    .delay-500 { animation-delay: 0.5s !important; }
 }
 
 @layer components {

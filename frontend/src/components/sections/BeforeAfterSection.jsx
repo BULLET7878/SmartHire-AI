@@ -1,14 +1,14 @@
 const BeforeAfterSection = () => {
     return (
         <section className="py-24 px-6 max-w-7xl mx-auto w-full relative">
-            <div className="text-center space-y-4 mb-16">
+            <div className="text-center space-y-4 mb-16 scroll-reveal">
                 <h2 className="heading-lg">The SmartHire Impact</h2>
                 <p className="text-gray-400 max-w-2xl mx-auto">Transform your recruitment and application experience.</p>
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
                 {/* Before */}
-                <div className="card bg-red-500/5 border-red-500/10 p-8 md:p-10 rounded-[40px] relative overflow-hidden group hover:border-red-500/30 transition-colors duration-500">
+                <div className="scroll-reveal-left card bg-red-500/5 border-red-500/10 p-8 md:p-10 rounded-[40px] relative overflow-hidden group hover:border-red-500/30 transition-colors duration-500">
                     <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-red-500/10 rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
                     <div className="relative z-10">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-red-500/10 border border-red-500/20 text-red-400 text-xs font-black uppercase tracking-widest mb-10 shadow-lg">
@@ -43,7 +43,7 @@ const BeforeAfterSection = () => {
                 </div>
 
                 {/* After */}
-                <div className="card bg-green-500/5 border-green-500/10 p-8 md:p-10 rounded-[40px] relative overflow-hidden group hover:border-green-500/30 transition-colors duration-500">
+                <div className="scroll-reveal-right card bg-green-500/5 border-green-500/10 p-8 md:p-10 rounded-[40px] relative overflow-hidden group hover:border-green-500/30 transition-colors duration-500">
                     <div className="absolute top-[-20%] right-[-10%] w-64 h-64 bg-green-500/10 rounded-full blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
                     <div className="relative z-10">
                         <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-black uppercase tracking-widest mb-10 shadow-lg">
