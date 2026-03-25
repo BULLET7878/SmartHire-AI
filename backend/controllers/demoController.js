@@ -3,13 +3,16 @@ const { analyzeResume, calculateMatchInsight } = require('../utils/geminiUtil');
 // Simple in-memory rate limiting for the demo endpoint
 // Key: IP, Value: { count: Number, resetTime: Number }
 const rateLimitCache = {};
-const MAX_REQUESTS = 2;
+const MAX_REQUESTS = 5;
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 const analyzeDemo = async (req, res) => {
     try {
         const { resumeText, jobDescription } = req.body;
-        const clientIp = req.ip || req.connection.remoteAddress;
+
+        // Use X-Forwarded-For to get real client IP behind proxies (Railway, Vercel, etc.)
+        const forwarded = req.headers['x-forwarded-for'];
+        const clientIp = forwarded ? forwarded.split(',')[0].trim() : (req.ip || req.connection.remoteAddress);
 
         // Rate Limiter
         const now = Date.now();

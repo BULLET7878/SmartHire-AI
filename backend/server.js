@@ -24,6 +24,9 @@ connectDB();
 const app = express();
 const jwt = require('jsonwebtoken');
 
+// Trust proxy headers (needed for Railway/Render/Vercel deployments)
+app.set('trust proxy', 1);
+
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
