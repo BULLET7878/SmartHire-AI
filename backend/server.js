@@ -30,6 +30,18 @@ app.set('trust proxy', 1);
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// Fix for Netlify Serverless where req.body arrives as a raw Buffer
+app.use((req, res, next) => {
+    if (Buffer.isBuffer(req.body)) {
+        try {
+            req.body = JSON.parse(req.body.toString('utf8'));
+        } catch (e) {
+            console.error('Failed to parse Buffer body', e);
+        }
+    }
+    next();
+});
 app.use(cors({
     origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
