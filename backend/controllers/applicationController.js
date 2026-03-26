@@ -206,10 +206,10 @@ const getMyApplications = async (req, res) => {
         // Generate summary statistics
         const totalApplications = output.length;
         const validScores = output.map(app => app.matchScore).filter(score => score && score > 0);
-        const averageScore = validScores.length > 0 
-            ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length) 
+        const averageScore = validScores.length > 0
+            ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length)
             : 0;
-        
+
         const shortlistedCount = output.filter(app => ['Shortlisted', 'Interviewed', 'Accepted'].includes(app.status)).length;
 
         // Calculate profile strength estimation
@@ -298,7 +298,7 @@ const getPulse = async (req, res) => {
         // Get resumes to match and calculate average score
         const MatchResult = require('../models/MatchResult');
         const matches = await MatchResult.find({ jobId: { $in: jobIds } });
-        
+
         const validScores = matches.map(m => m.score).filter(s => s > 0);
         const averageScore = validScores.length > 0 ? Math.round(validScores.reduce((a, b) => a + b, 0) / validScores.length) : 0;
         const topCandidates = validScores.filter(s => s >= 80).length;

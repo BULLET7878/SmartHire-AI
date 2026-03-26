@@ -62,7 +62,7 @@ const Login = () => {
     return (
         <div className="min-h-screen flex items-center justify-center p-6 pt-24 pb-24">
             <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24">
-                
+
                 {/* Left Side: Value Proposition & Preview */}
                 <LoginInfoSection />
 
@@ -73,7 +73,7 @@ const Login = () => {
                             Sign up or log in to save your results and apply for jobs.
                         </div>
                     )}
-                    <LoginForm 
+                    <LoginForm
                         onLogin={handleLogin}
                         onGoogleSuccess={handleGoogleSuccess}
                         error={error}

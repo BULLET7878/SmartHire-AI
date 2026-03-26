@@ -89,7 +89,7 @@ const googleLoginUser = async (req, res) => {
     const { token } = req.body;
     console.log('--- Google Login Request Initialized ---');
     console.log(`Token received: ${token ? 'Yes (starts with ' + token.substring(0, 10) + '...)' : 'No'}`);
-    
+
     if (!token) {
         console.error('Error: No Google token provided in request body');
         return res.status(400).json({ message: 'No Google token provided' });
@@ -98,29 +98,29 @@ const googleLoginUser = async (req, res) => {
     try {
         const client = getGoogleClient();
         const googleIdKey = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID;
-        
+
         console.log(`Verifying Google token with clientID: ${googleIdKey}`);
 
         const ticket = await client.verifyIdToken({
             idToken: token,
             audience: googleIdKey
         });
-        
+
         const payload = ticket.getPayload();
         console.log('Google Token Verified Successfully.');
         console.log(`User Info from Google: ${payload.email} (${payload.name})`);
-        
+
         const { sub: googleId, email, name } = payload;
-        
+
         // 1. Check if user already exists by googleId
         let user = await User.findOne({ googleId });
         console.log(`User lookup by googleId: ${user ? 'Found' : 'Not Found'}`);
-        
+
         if (!user) {
             // 2. Check if user exists by email (registered normally first)
             user = await User.findOne({ email });
             console.log(`User lookup by email: ${user ? 'Found' : 'Not Found'}`);
-            
+
             if (user) {
                 console.log(`Linking existing email account to googleId: ${googleId}`);
                 user.googleId = googleId;
@@ -130,7 +130,7 @@ const googleLoginUser = async (req, res) => {
                 // 3. Create a completely new user
                 const salt = await bcrypt.genSalt(10);
                 const randomPassword = await bcrypt.hash(Math.random().toString(36).slice(-10) + Date.now(), salt);
-                
+
                 user = await User.create({
                     name,
                     email,
@@ -141,9 +141,9 @@ const googleLoginUser = async (req, res) => {
                 console.log('New user created successfully.');
             }
         }
-        
+
         console.log(`Login successful for user: ${user.name}`);
-        
+
         res.json({
             _id: user.id,
             name: user.name,
@@ -151,7 +151,7 @@ const googleLoginUser = async (req, res) => {
             role: user.role,
             token: generateToken(user._id)
         });
-        
+
     } catch (error) {
         console.error('CRITICAL: Google Auth Error:', error.message);
         if (error.message.includes('audience')) {
