@@ -12,7 +12,13 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        required: true
+        required: false // Optional for users logging in via Google
+    },
+    googleId: {
+        type: String,
+        required: false,
+        unique: true,
+        sparse: true // Allows multiple null/undefined googleIds
     },
     role: {
         type: String,

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { GoogleLogin } from '@react-oauth/google';
 import api from '../api';
 
 const Register = () => {
@@ -41,6 +42,23 @@ const Register = () => {
         }
     };
 
+    const handleGoogleSuccess = async (response) => {
+        console.log('--- Google Success Event (Frontend) ---');
+        console.log('Credential received from Google:', response.credential ? 'Yes' : 'No');
+        try {
+            console.log('Sending token to backend /api/auth/google...');
+            const res = await api.post('/auth/google', { token: response.credential });
+            console.log('Backend response received successfully!');
+            localStorage.setItem('token', res.data.token);
+            const { token, ...userData } = res.data;
+            localStorage.setItem('user', JSON.stringify(userData));
+            navigate('/dashboard');
+        } catch (err) {
+            console.error('API Error during Google Auth:', err);
+            setError(err.response?.data?.message || 'Google Authentication failed');
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center p-6 pt-28">
             <div className={`w-full max-w-md transition-all duration-1000 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}>
@@ -58,6 +76,23 @@ const Register = () => {
                             <h2 className="text-4xl font-black text-white italic tracking-tighter mb-2">Register</h2>
                             <p className="text-gray-500 text-[12px] font-bold uppercase tracking-widest opacity-60">Join the platform</p>
                         </header>
+
+                        <div className={`transition-all duration-700 delay-75 mb-6 flex justify-center ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
+                            <GoogleLogin
+                                onSuccess={handleGoogleSuccess}
+                                onError={() => console.log('Google Sign In failed')}
+                                theme="filled_black"
+                                shape="pill"
+                                width="100%"
+                                text="signup_with"
+                            />
+                        </div>
+
+                        <div className={`flex items-center gap-4 mb-6 opacity-40 transition-all duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
+                            <div className="flex-1 h-px bg-white/20"></div>
+                            <span className="text-[10px] uppercase font-bold tracking-widest text-white/50">or register with email</span>
+                            <div className="flex-1 h-px bg-white/20"></div>
+                        </div>
 
                         <form onSubmit={handleRegister} className="space-y-6">
                             <div className="space-y-5">

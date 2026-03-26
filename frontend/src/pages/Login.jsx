@@ -42,6 +42,23 @@ const Login = () => {
         }
     };
 
+    const handleGoogleSuccess = async (response) => {
+        console.log('--- Google Success Event (Frontend) ---');
+        console.log('Credential received from Google:', response.credential ? 'Yes' : 'No');
+        try {
+            console.log('Sending token to backend /api/auth/google...');
+            const res = await api.post('/auth/google', { token: response.credential });
+            console.log('Backend response received successfully!');
+            localStorage.setItem('token', res.data.token);
+            const { token, ...userData } = res.data;
+            localStorage.setItem('user', JSON.stringify(userData));
+            navigate('/dashboard');
+        } catch (err) {
+            console.error('API Error during Google Auth:', err);
+            setError(err.response?.data?.message || 'Google Authentication failed');
+        }
+    };
+
     return (
         <div className="min-h-screen flex items-center justify-center p-6 pt-24 pb-24">
             <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center justify-between gap-12 lg:gap-24">
@@ -58,6 +75,7 @@ const Login = () => {
                     )}
                     <LoginForm 
                         onLogin={handleLogin}
+                        onGoogleSuccess={handleGoogleSuccess}
                         error={error}
                         mounted={mounted}
                         email={email}
