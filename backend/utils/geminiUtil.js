@@ -10,6 +10,30 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "PLACEHOLDER_
 const basicTokenize = (text) => text.toLowerCase().match(/\b\w+\b/g) || [];
 
 /**
+ * Robust JSON extraction and parsing
+ */
+const safeJsonParse = (text) => {
+    try {
+        // Try direct parse first
+        return JSON.parse(text);
+    } catch (e) {
+        try {
+            // Find first { and last }
+            const start = text.indexOf('{');
+            const end = text.lastIndexOf('}');
+            if (start !== -1 && end !== -1) {
+                const jsonStr = text.substring(start, end + 1);
+                return JSON.parse(jsonStr);
+            }
+            throw new Error("No JSON object found in text");
+        } catch (e2) {
+            console.error("Failed to parse JSON even with extraction:", e2.message);
+            return null;
+        }
+    }
+};
+
+/**
  * Heuristic check to see if a document is a resume or a financial statement
  */
 function localIsResumeCheck(text) {
@@ -171,8 +195,13 @@ async function analyzeResume(text) {
         ]);
 
         const response = await result.response;
-        let jsonText = response.text().replace(/```json|```/gi, "").trim();
-        const parsed = JSON.parse(jsonText);
+        const rawText = response.text();
+        const parsed = safeJsonParse(rawText);
+
+        if (!parsed) {
+            console.warn("Gemini returned invalid JSON structure. Falling back to local analysis.");
+            return localAnalyzeResume(text);
+        }
 
         // Flatten skills object to array
         let flatSkills = [];
@@ -195,6 +224,77 @@ async function analyzeResume(text) {
         // Fallback to local on API error
         return localAnalyzeResume(text);
     }
+}
+
+/**
+ * Performs local matching between a resume and job description (fallback)
+ */
+function localCalculateMatchInsight(resumeData, jobDescription) {
+    // Fallback: Perform basic local string matching if Gemini is missing
+    // Extract basic keywords using native regex map
+    const resumeTokens = new Set(basicTokenize(JSON.stringify(resumeData)));
+    const jdTokens = new Set(basicTokenize(jobDescription));
+
+    const resumeSkills = resumeData.skills && Array.isArray(resumeData.skills) ? resumeData.skills : [];
+    const requiredSkills = resumeData._jobRequiredSkills || []; 
+
+    // If no skills are defined anywhere, try to salvage from description
+    const commonTech = ['javascript', 'python', 'java', 'react', 'node', 'sql', 'aws', 'docker', 'kubernetes', 'html', 'css', 'typescript', 'mongodb', 'express', 'git', 'agile', 'linux', 'c++', 'c#', 'php', 'ruby', 'go', 'rust'];
+    const allPotentialSkills = [...new Set([...resumeSkills, ...requiredSkills, ...commonTech])];
+
+    const matchedKeywords = [];
+    const missingSkills = [];
+
+    // Dynamic scoring against JD
+    allPotentialSkills.forEach(skill => {
+        const skillLower = skill.toLowerCase();
+        // If the job mentions it
+        if (jdTokens.has(skillLower) || jobDescription.toLowerCase().includes(skillLower)) {
+            // Check if user has it
+            if (resumeTokens.has(skillLower) || resumeSkills.some(rs => rs.toLowerCase().includes(skillLower))) {
+                if (!matchedKeywords.includes(skill)) matchedKeywords.push(skill);
+            } else {
+                if (!missingSkills.includes(skill)) missingSkills.push(skill);
+            }
+        } else if (requiredSkills.some(rs => rs.toLowerCase() === skillLower)) {
+            // Even if not directly in JD string, if it was explicitly a required skill
+            if (resumeTokens.has(skillLower) || resumeSkills.some(rs => rs.toLowerCase().includes(skillLower))) {
+                if (!matchedKeywords.includes(skill)) matchedKeywords.push(skill);
+            } else {
+                if (!missingSkills.includes(skill)) missingSkills.push(skill);
+            }
+        }
+    });
+
+    const totalRelevant = matchedKeywords.length + missingSkills.length;
+    let score = 0; 
+    let dynamicJustification = "Basic keyword analysis completed (Local Fallback). ";
+
+    if (totalRelevant > 0) {
+        const matchRatio = matchedKeywords.length / totalRelevant;
+        score = Math.floor(matchRatio * 100);
+
+        if (score >= 75) {
+            dynamicJustification += `Strong alignment found with key requirements like ${matchedKeywords.slice(0, 2).join(' and ')}.`;
+        } else if (score >= 40) {
+            dynamicJustification += `Moderate match. You have some required skills but are missing ${missingSkills.slice(0, 2).join(' and ')}.`;
+        } else {
+            dynamicJustification += `Weak match. Consider highlighting skills like ${missingSkills.slice(0, 3).join(', ')} if you have them.`;
+        }
+    } else {
+        const similarity = 0.5; 
+        score = Math.floor(similarity * 100);
+        dynamicJustification += `Score derived from general text similarity (${score}%). No specific technical keywords were extracted directly.`;
+    }
+
+    return {
+        score: score,
+        status: score >= 75 ? "Strong Match" : score >= 40 ? "Medium Match" : "Weak Match",
+        justification: dynamicJustification,
+        subScores: { skills: score, experience: score, formatting: 70, education: 80, keywordMatch: score },
+        missingSkills: missingSkills,
+        matchedKeywords: matchedKeywords
+    };
 }
 
 /**
@@ -221,72 +321,7 @@ async function calculateMatchInsight(resumeData, jobDescription) {
     const hasKey = process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== 'your_key_here' && process.env.GEMINI_API_KEY !== 'PLACEHOLDER_KEY';
 
     if (!hasKey) {
-        // Fallback: Perform basic local string matching if Gemini is missing
-        // Extract basic keywords using native regex map
-        const resumeTokens = new Set(basicTokenize(JSON.stringify(resumeData)));
-        const jdTokens = new Set(basicTokenize(jobDescription));
-
-        const resumeSkills = resumeData.skills && Array.isArray(resumeData.skills) ? resumeData.skills : [];
-        const requiredSkills = resumeData._jobRequiredSkills || []; // We'll assume we can optionally pass this or just rely on JD
-
-        // If no skills are defined anywhere, try to salvage from description
-        const commonTech = ['javascript', 'python', 'java', 'react', 'node', 'sql', 'aws', 'docker', 'kubernetes', 'html', 'css', 'typescript', 'mongodb', 'express', 'git', 'agile', 'linux', 'c++', 'c#', 'php', 'ruby', 'go', 'rust'];
-        const allPotentialSkills = [...new Set([...resumeSkills, ...requiredSkills, ...commonTech])];
-
-        const matchedKeywords = [];
-        const missingSkills = [];
-
-        // Dynamic scoring against JD
-        allPotentialSkills.forEach(skill => {
-            const skillLower = skill.toLowerCase();
-            // If the job mentions it
-            if (jdTokens.has(skillLower) || jobDescription.toLowerCase().includes(skillLower)) {
-                // Check if user has it
-                if (resumeTokens.has(skillLower) || resumeSkills.some(rs => rs.toLowerCase().includes(skillLower))) {
-                    if (!matchedKeywords.includes(skill)) matchedKeywords.push(skill);
-                } else {
-                    if (!missingSkills.includes(skill)) missingSkills.push(skill);
-                }
-            } else if (requiredSkills.some(rs => rs.toLowerCase() === skillLower)) {
-                // Even if not directly in JD string, if it was explicitly a required skill
-                if (resumeTokens.has(skillLower) || resumeSkills.some(rs => rs.toLowerCase().includes(skillLower))) {
-                    if (!matchedKeywords.includes(skill)) matchedKeywords.push(skill);
-                } else {
-                    if (!missingSkills.includes(skill)) missingSkills.push(skill);
-                }
-            }
-        });
-
-        const totalRelevant = matchedKeywords.length + missingSkills.length;
-        let score = 0; // Base score starts at 0 for strict evaluation
-        let dynamicJustification = "Basic keyword analysis completed. ";
-
-        if (totalRelevant > 0) {
-            const matchRatio = matchedKeywords.length / totalRelevant;
-            score = Math.floor(matchRatio * 100);
-
-            if (score >= 75) {
-                dynamicJustification += `Strong alignment found with key requirements like ${matchedKeywords.slice(0, 2).join(' and ')}.`;
-            } else if (score >= 40) {
-                dynamicJustification += `Moderate match. You have some required skills but are missing ${missingSkills.slice(0, 2).join(' and ')}.`;
-            } else {
-                dynamicJustification += `Weak match. Consider highlighting skills like ${missingSkills.slice(0, 3).join(', ')} if you have them.`;
-            }
-        } else {
-            // Basic fallback similarity when keywords fail
-            const similarity = 0.5; // Dummy fallback since natural was removed due to ESM errors
-            score = Math.floor(similarity * 100);
-            dynamicJustification += `Score derived from general text similarity (${score}%). No specific technical keywords were extracted directly.`;
-        }
-
-        return {
-            score: score,
-            status: score >= 75 ? "Strong Match" : score >= 40 ? "Medium Match" : "Weak Match",
-            justification: dynamicJustification,
-            subScores: { skills: score, experience: score, formatting: 70, education: 80, keywordMatch: score },
-            missingSkills: missingSkills,
-            matchedKeywords: matchedKeywords
-        };
+        return localCalculateMatchInsight(resumeData, jobDescription);
     }
 
     try {
@@ -382,8 +417,12 @@ Return pure JSON only.
         ]);
 
         const response = await result.response;
-        let jsonText = response.text().replace(/```json|```/gi, "").trim();
-        const parsedData = JSON.parse(jsonText);
+        const rawText = response.text();
+        const parsedData = safeJsonParse(rawText);
+
+        if (!parsedData) {
+            throw new Error("Could not extract valid JSON from Gemini match response");
+        }
 
         // Map to expected frontend structure to avoid breaking UI components
         return {
@@ -392,7 +431,8 @@ Return pure JSON only.
         };
     } catch (error) {
         console.error("Gemini Match Error:", error.message);
-        return { score: 0, status: "Error", justification: "Deep match failed." };
+        // Fallback to local analysis if API fails
+        return localCalculateMatchInsight(resumeData, jobDescription);
     }
 }
 

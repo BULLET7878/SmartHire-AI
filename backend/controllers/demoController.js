@@ -3,7 +3,7 @@ const { analyzeResume, calculateMatchInsight } = require('../utils/geminiUtil');
 // Simple in-memory rate limiting for the demo endpoint
 // Key: IP, Value: { count: Number, resetTime: Number }
 const rateLimitCache = {};
-const MAX_REQUESTS = 5;
+const MAX_REQUESTS = 10;
 const WINDOW_MS = 60 * 60 * 1000; // 1 hour
 
 const analyzeDemo = async (req, res) => {
@@ -12,7 +12,7 @@ const analyzeDemo = async (req, res) => {
 
         // Use X-Forwarded-For to get real client IP behind proxies (Railway, Vercel, etc.)
         const forwarded = req.headers['x-forwarded-for'];
-        const clientIp = forwarded ? forwarded.split(',')[0].trim() : (req.ip || req.connection.remoteAddress);
+        const clientIp = forwarded ? forwarded.split(',')[0].trim() : (req.ip || req.connection?.remoteAddress || 'unknown');
 
         // Rate Limiter
         const now = Date.now();
@@ -28,7 +28,7 @@ const analyzeDemo = async (req, res) => {
                 record.count += 1;
                 if (record.count > MAX_REQUESTS) {
                     return res.status(429).json({ 
-                        message: "Demo limit reached. Please register to use the full application." 
+                        message: "Demo limit reached. Please register to use the full application for unlimited analysis." 
                     });
                 }
             }
@@ -43,7 +43,7 @@ const analyzeDemo = async (req, res) => {
         
         if (!resumeData || !resumeData.isResume) {
              return res.status(400).json({ 
-                message: resumeData?.reason || "Could not parse a valid resume from the provided text." 
+                message: resumeData?.reason || "Could not parse a valid resume from the provided text. Ensure it includes contact info, skills, and experience." 
             });
         }
 
@@ -64,8 +64,8 @@ const analyzeDemo = async (req, res) => {
 
         return res.json(responseData);
     } catch (err) {
-        console.error("Demo Analysis Error:", err);
-        return res.status(500).json({ message: "An error occurred during demo analysis." });
+        console.error("Demo Analysis Error:", err.stack || err);
+        return res.status(500).json({ message: "An error occurred during demo analysis. Please try again in a moment." });
     }
 };
 
