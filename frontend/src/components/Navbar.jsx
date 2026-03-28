@@ -30,7 +30,7 @@ const Navbar = () => {
     return (
         <nav className="border-b border-white/10 bg-black/40 backdrop-blur-xl sticky top-0 z-50">
             <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-                <Link to="/" className="hover:opacity-90 transition-opacity">
+                <Link to="/" className="hover:opacity-100 transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]">
                     <Logo />
                 </Link>
 
