@@ -19,11 +19,12 @@ services:
         value: "production"
 
   # Frontend Static Site
-  - type: static_site
+  - type: web
     name: smarthire-frontend
+    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
-    publishPath: dist
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         fromService:
