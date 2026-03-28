@@ -1,12 +1,13 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import HeroSection from '../components/sections/HeroSection';
-import FeaturesSection from '../components/sections/FeaturesSection';
-import UseCasesSection from '../components/sections/UseCasesSection';
-import BeforeAfterSection from '../components/sections/BeforeAfterSection';
 import HowItWorksSection from '../components/sections/HowItWorksSection';
+import BeforeAfterSection from '../components/sections/BeforeAfterSection';
+import FeaturesSection from '../components/sections/FeaturesSection';
 import PreviewSection from '../components/sections/PreviewSection';
 import TrustSection from '../components/sections/TrustSection';
+import UseCasesSection from '../components/sections/UseCasesSection';
+import TestimonialsSection from '../components/sections/TestimonialsSection';
 import FooterCTA from '../components/sections/FooterCTA';
 
 const LandingPage = () => {
@@ -18,8 +19,6 @@ const LandingPage = () => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('revealed');
-                    } else {
-                        entry.target.classList.remove('revealed');
                     }
                 });
             },
@@ -38,12 +37,16 @@ const LandingPage = () => {
         <div className="w-full flex justify-center pb-24">
             <div className="w-full max-w-[1440px] flex flex-col items-center">
                 <HeroSection />
-                <TrustSection />
-                <UseCasesSection />
+                <HowItWorksSection />
+                
+                {/* AI Features Ensemble */}
                 <BeforeAfterSection />
                 <FeaturesSection />
-                <HowItWorksSection />
+
                 <PreviewSection />
+                <TrustSection />
+                <UseCasesSection />
+                <TestimonialsSection />
                 <FooterCTA />
             </div>
         </div>
