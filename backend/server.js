@@ -25,9 +25,10 @@ const jwt = require('jsonwebtoken');
 app.set('trust proxy', 1);
 
 // Serverless DB Connection Middleware
-app.use(async (req, res, next) => {
-    await connectDB();
-    next();
+app.use((req, res, next) => {
+    connectDB()
+        .then(() => next())
+        .catch((err) => next(err));
 });
 
 // Middleware

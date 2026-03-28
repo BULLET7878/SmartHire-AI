@@ -11,25 +11,30 @@ const {
     getMatchInsight
 } = require('../controllers/applicationController');
 
+// Async route wrapper for Express 4
+const asyncHandler = fn => (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+};
+
 // Apply to a job
-router.post('/:jobId', protect, applyToJob);
+router.post('/:jobId', protect, asyncHandler(applyToJob));
 
 // Update status (recruiter only)
-router.put('/:id/status', protect, updateApplicationStatus);
+router.put('/:id/status', protect, asyncHandler(updateApplicationStatus));
 
 // Get job's applications (recruiter only)
-router.get('/job/:jobId', protect, getJobApplications);
+router.get('/job/:jobId', protect, asyncHandler(getJobApplications));
 
 // Get my applications
-router.get('/my', protect, getMyApplications);
+router.get('/my', protect, asyncHandler(getMyApplications));
 
 // Check if applied to job
-router.get('/check/:jobId', protect, checkApplication);
+router.get('/check/:jobId', protect, asyncHandler(checkApplication));
 
 // Get recruiter global stats
-router.get('/pulse', protect, getPulse);
+router.get('/pulse', protect, asyncHandler(getPulse));
 
 // Get match insight for a job
-router.get('/insight/:jobId', protect, getMatchInsight);
+router.get('/insight/:jobId', protect, asyncHandler(getMatchInsight));
 
 module.exports = router;
