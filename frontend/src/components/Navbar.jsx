@@ -37,8 +37,10 @@ const Navbar = () => {
                 <div className="flex items-center gap-6">
                     {/* Main Nav Links */}
                     <div className="hidden md:flex items-center gap-8 mr-4">
-                        <Link to="/" className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-white transition-all">Home</Link>
-                        <Link to="/demo" className="text-[11px] font-black uppercase tracking-[0.3em] text-gray-400 hover:text-white transition-all">AI Scan</Link>
+                        <Link to="/demo" className="relative group px-1 py-1 overflow-hidden transition-all duration-300">
+                            <span className="text-[11px] font-black uppercase tracking-[0.4em] text-white/70 group-hover:text-white transition-all">Try Demo</span>
+                            <div className="absolute bottom-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-purple-500/50 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500"></div>
+                        </Link>
                     </div>
 
                     {/* Profile Section */}
