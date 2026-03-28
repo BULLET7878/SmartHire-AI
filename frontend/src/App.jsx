@@ -10,8 +10,14 @@ import CursorTrail from './components/CursorTrail';
 import Footer from './components/Footer';
 
 function App() {
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  
+  if (!googleClientId) {
+    console.error("❌ CRITICAL: VITE_GOOGLE_CLIENT_ID is missing! Add it to your Vercel Environment Variables.");
+  }
+
   return (
-    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || 'loading'}>
+    <GoogleOAuthProvider clientId={googleClientId || 'loading-missing-id'}>
       <Router>
         <div className="min-h-screen font-sans relative flex flex-col">
           {/* Fixed Background Layer */}
