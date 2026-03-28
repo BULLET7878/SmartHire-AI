@@ -12,20 +12,23 @@ const REQUIRED_ENV_VARS = ['MONGO_URI', 'JWT_SECRET', 'GEMINI_API_KEY'];
 const missingVars = REQUIRED_ENV_VARS.filter(v => !process.env[v]);
 if (missingVars.length > 0) {
     console.error('❌ MISSING REQUIRED ENVIRONMENT VARIABLES:', missingVars.join(', '));
-    console.error('   → Go to Railway dashboard → your service → Variables tab and add them.');
-    process.exit(1); // Crash early so Railway shows the error clearly
+    console.error('   → Go to Netlify/Railway dashboard → your service → Variables tab and add them.');
 }
 console.log('✅ All required environment variables are present.');
 
-// Connect to database
-// Connect to database
-connectDB();
+// The DB will connect via middleware instead of eagerly at startup
 
 const app = express();
 const jwt = require('jsonwebtoken');
 
 // Trust proxy headers (needed for Railway/Render/Vercel deployments)
 app.set('trust proxy', 1);
+
+// Serverless DB Connection Middleware
+app.use(async (req, res, next) => {
+    await connectDB();
+    next();
+});
 
 // Middleware
 app.use(express.json());
