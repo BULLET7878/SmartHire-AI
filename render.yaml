@@ -19,9 +19,8 @@ services:
         value: "production"
 
   # Frontend Static Site
-  - type: static
+  - type: static_site
     name: smarthire-frontend
-    runtime: static
     rootDir: frontend
     buildCommand: npm install && npm run build
     publishPath: dist
