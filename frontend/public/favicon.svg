@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <!-- Background -->
+  <rect width="64" height="64" rx="14" fill="#0f172a"/>
+  <!-- Gradient overlay -->
+  <rect width="64" height="64" rx="14" fill="url(#grad)"/>
+  <defs>
+    <linearGradient id="grad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2563eb" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.6"/>
+    </linearGradient>
+  </defs>
+  <!-- Brain outline -->
+  <path d="M24 14C19 14 16 17 16 21C13 21 10 24 10 27C10 30 12 32.5 15 33.5C15 37 17.5 40 21 41V48H27V41C30 40.2 32 38 32 35.5V32C34.5 33 37 31.5 38.5 29C40.5 29.5 43 28 43.5 26C45 25.2 46 23.5 46 21.5C46 19 44 17 41.5 16.8C41 13.5 38 11 35 11C32.5 11 30 12.5 28.5 14.8C27.2 14.3 25.6 14 24 14Z"
+    stroke="#93c5fd" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Checkmark -->
+  <path d="M21 24L26 30L38 18"
+    stroke="#34d399" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
