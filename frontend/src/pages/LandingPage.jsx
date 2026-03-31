@@ -19,6 +19,9 @@ const LandingPage = () => {
                 entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('revealed');
+                    } else {
+                        // Remove class to make animation repeatable when scrolling back
+                        entry.target.classList.remove('revealed');
                     }
                 });
             },

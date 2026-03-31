@@ -202,13 +202,13 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                 <div className="space-y-2">
                     <div className="flex items-center gap-3">
                         <span className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-[0_0_15px_rgba(59,130,246,0.5)]"></span>
-                        <h2 className="text-[12px] font-black text-blue-400 uppercase tracking-[0.5em]">Recruitment HQ</h2>
+                        <h2 className="text-xs font-black text-blue-400 uppercase tracking-[0.5em]">Recruitment HQ</h2>
                     </div>
                     <h1 className="text-5xl font-black text-white italic tracking-tighter">Acquire Talent.</h1>
                 </div>
                 <div className="flex items-center gap-4">
                     <div className="text-right hidden sm:block">
-                        <p className="text-[12px] font-black text-gray-500 uppercase tracking-widest">Global Reach</p>
+                        <p className="text-xs font-black text-gray-500 uppercase tracking-widest">Global Reach</p>
                         <p className="text-white font-black">Active Mode</p>
                     </div>
                     <div className="w-12 h-12 bg-white/5 border border-white/10 rounded-2xl flex items-center justify-center text-xl">💼</div>
@@ -221,19 +221,19 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-4 md:gap-6">
                         <div className="card bg-blue-500/5 border-blue-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-blue-500/10 transition-all">
                             <span className="text-3xl md:text-4xl font-black text-blue-400 mb-2">{pulse.totalJobs}</span>
-                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Active Postings</p>
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Active Postings</p>
                         </div>
                         <div className="card bg-purple-500/5 border-purple-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-purple-500/10 transition-all">
                             <span className="text-3xl md:text-4xl font-black text-purple-400 mb-2">{pulse.totalApplied}</span>
-                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Total Applicants</p>
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Total Applicants</p>
                         </div>
                         <div className="card bg-green-500/5 border-green-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-green-500/10 transition-all">
                             <span className="text-3xl md:text-4xl font-black text-green-400 mb-2">{pulse.averageScore || 0}%</span>
-                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Avg Candidate Score</p>
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Avg Candidate Score</p>
                         </div>
                         <div className="card bg-yellow-500/5 border-yellow-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-yellow-500/10 transition-all">
                             <span className="text-3xl md:text-4xl font-black text-yellow-400 mb-2">{pulse.topCandidates || 0}</span>
-                            <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">Top Performers (80%+)</p>
+                            <p className="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Top Performers (80%+)</p>
                         </div>
                     </div>
 
@@ -247,21 +247,21 @@ const RecruiterDashboard = ({ onJobCreated }) => {
 
                             <div className="flex flex-col gap-4 max-w-2xl mx-auto">
                                 <div className="flex items-center gap-6">
-                                    <div className="w-24 text-[10px] font-black text-gray-500 uppercase">Applied</div>
+                                    <div className="w-24 text-xs font-black text-gray-500 uppercase">Applied</div>
                                     <div className="flex-1 h-3 bg-white/5 rounded-full overflow-hidden">
                                         <div className="h-full bg-blue-500 transition-all duration-1000" style={{ width: '100%' }}></div>
                                     </div>
                                     <div className="w-12 text-right text-xs font-bold">{pulse.totalApplied}</div>
                                 </div>
                                 <div className="flex items-center gap-6">
-                                    <div className="w-24 text-[10px] font-black text-gray-500 uppercase">Reviewed</div>
+                                    <div className="w-24 text-xs font-black text-gray-500 uppercase">Reviewed</div>
                                     <div className="flex-1 h-3 bg-white/5 rounded-full overflow-hidden">
                                         <div className="h-full bg-purple-500 transition-all duration-1000" style={{ width: `${(pulse.reviewed / pulse.totalApplied) * 100 || 0}%` }}></div>
                                     </div>
                                     <div className="w-12 text-right text-xs font-bold">{pulse.reviewed}</div>
                                 </div>
                                 <div className="flex items-center gap-6">
-                                    <div className="w-24 text-[10px] font-black text-gray-500 uppercase">Qualified</div>
+                                    <div className="w-24 text-xs font-black text-gray-500 uppercase">Qualified</div>
                                     <div className="flex-1 h-3 bg-white/5 rounded-full overflow-hidden">
                                         <div className="h-full bg-green-500 transition-all duration-1000" style={{ width: `${(pulse.shortlisted / pulse.totalApplied) * 100 || 0}%` }}></div>
                                     </div>
@@ -290,26 +290,26 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
                             {/* Identity Section */}
                             <div className="space-y-8">
-                                <h4 className="text-[12px] font-black text-blue-400 uppercase tracking-[0.3em] flex items-center gap-4">
+                                <h4 className="text-xs font-black text-blue-400 uppercase tracking-[0.3em] flex items-center gap-4">
                                     <span className="w-4 h-px bg-blue-500/50"></span>
                                     Identity & Role
                                 </h4>
                                 <div className="space-y-6">
                                     <div className="group">
-                                        <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Job Designation</label>
+                                        <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Job Designation</label>
                                         <input type="text" className="input-field" placeholder="e.g. Senior Kernel Engineer" value={title} onChange={(e) => setTitle(e.target.value)} />
                                     </div>
                                     <div className="group">
-                                        <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Organization</label>
+                                        <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Organization</label>
                                         <input type="text" className="input-field" placeholder="Company Name" value={company} onChange={(e) => setCompany(e.target.value)} />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4">
                                         <div className="group">
-                                            <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Location</label>
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Location</label>
                                             <input type="text" className="input-field text-xs" placeholder="City / Remote" value={location} onChange={(e) => setLocation(e.target.value)} />
                                         </div>
                                         <div className="group">
-                                            <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Experience</label>
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Experience</label>
                                             <select className="input-field text-xs appearance-none" value={experience} onChange={(e) => setExperience(e.target.value)}>
                                                 <option className="bg-slate-900" value="Entry">Entry Level</option>
                                                 <option className="bg-slate-900" value="Mid Level">Mid Level</option>
@@ -319,7 +319,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                         </div>
                                     </div>
                                     <div className="group">
-                                        <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Type</label>
+                                        <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Type</label>
                                         <select className="input-field text-xs appearance-none" value={type} onChange={(e) => setType(e.target.value)}>
                                             <option className="bg-slate-900" value="Full-time">Full-time</option>
                                             <option className="bg-slate-900" value="Part-time">Part-time</option>
@@ -332,21 +332,21 @@ const RecruiterDashboard = ({ onJobCreated }) => {
 
                             {/* Expertise Section */}
                             <div className="space-y-8">
-                                <h4 className="text-[12px] font-black text-purple-400 uppercase tracking-[0.3em] flex items-center gap-4">
+                                <h4 className="text-xs font-black text-purple-400 uppercase tracking-[0.3em] flex items-center gap-4">
                                     <span className="w-4 h-px bg-purple-500/50"></span>
                                     Expertise & Returns
                                 </h4>
                                 <div className="space-y-6">
                                     <div className="group">
-                                        <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Required Keywords</label>
+                                        <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Required Keywords</label>
                                         <input type="text" className="input-field" placeholder="React, Node.js, AWS..." value={skills} onChange={(e) => setSkills(e.target.value)} />
                                     </div>
                                     <div className="group">
-                                        <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Stipend / Package</label>
+                                        <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Stipend / Package</label>
                                         <input type="text" className="input-field" placeholder="Fixed or Scale" value={salary} onChange={(e) => setSalary(e.target.value)} />
                                     </div>
                                     <div className="group">
-                                        <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Job Description PDF</label>
+                                        <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Job Description PDF</label>
                                         <div className="relative">
                                             <input
                                                 id="jd-upload"
@@ -362,13 +362,13 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                 <span className="truncate text-xs text-gray-400">
                                                     {jdFile ? jdFile.name : 'Upload Detailed JD (PDF)'}
                                                 </span>
-                                                <span className="bg-white/5 px-4 py-2 rounded-lg text-[10px] font-black uppercase">Browse</span>
+                                                <span className="bg-white/5 px-4 py-2 rounded-lg text-xs font-black uppercase">Browse</span>
                                             </label>
                                         </div>
                                     </div>
                                     {(type === 'Internship' || type === 'Contract') && (
                                         <div className="group animate-in fade-in slide-in-from-top-4">
-                                            <label className="block text-[12px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Duration</label>
+                                            <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Duration</label>
                                             <input type="text" className="input-field" placeholder="e.g. 6 Months" value={duration} onChange={(e) => setDuration(e.target.value)} />
                                         </div>
                                     )}
@@ -379,7 +379,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                         <div className="flex flex-col md:flex-row items-center justify-between mt-16 pt-10 border-t border-white/5 gap-6">
                             <div className="max-w-xs">
                                 {msg && (
-                                    <p className={`text-[11px] font-black uppercase tracking-widest px-4 py-2 rounded-xl animate-in zoom-in ${msg.includes('position') || msg.includes('Update') ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
+                                    <p className={`text-xs font-black uppercase tracking-widest px-4 py-2 rounded-xl animate-in zoom-in ${msg.includes('position') || msg.includes('Update') ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
                                         {msg}
                                     </p>
                                 )}
@@ -409,12 +409,12 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                 Your Postings
                             </h3>
                             <div className="flex gap-2">
-                                <button className="px-3 py-1 bg-blue-500/20 text-blue-400 text-[10px] font-black uppercase tracking-widest rounded-lg">Active</button>
-                                <button className="px-3 py-1 bg-white/5 text-gray-400 text-[10px] font-black uppercase tracking-widest rounded-lg">Closed</button>
+                                <button className="px-3 py-1 bg-blue-500/20 text-blue-400 text-xs font-black uppercase tracking-widest rounded-lg">Active</button>
+                                <button className="px-3 py-1 bg-white/5 text-gray-400 text-xs font-black uppercase tracking-widest rounded-lg">Closed</button>
                             </div>
                         </div>
                         <div className="flex items-center gap-3">
-                            <span className="text-[12px] font-black text-gray-500 uppercase tracking-widest">{items.length} Postings</span>
+                            <span className="text-xs font-black text-gray-500 uppercase tracking-widest">{items.length} Postings</span>
                             <button onClick={loadData} className="w-8 h-8 flex items-center justify-center bg-white/5 border border-white/10 rounded-full hover:bg-white/10 transition-all">🔄</button>
                         </div>
                     </div>
@@ -441,27 +441,27 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                 <div className="space-y-6">
                                     <div>
                                         <div className="flex gap-2">
-                                            <span className={`text-[8px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md border ${job.jobType === 'Internship' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : 'bg-blue-500/10 border-blue-500/20 text-blue-400'}`}>
+                                            <span className={`text-xs font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md border ${job.jobType === 'Internship' ? 'bg-purple-500/10 border-purple-500/20 text-purple-400' : 'bg-blue-500/10 border-blue-500/20 text-blue-400'}`}>
                                                 {job.jobType}
                                             </span>
                                             {job.status === 'Closed' && (
-                                                <span className="text-[8px] font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md border bg-red-500/10 border-red-500/20 text-red-400">
+                                                <span className="text-xs font-black uppercase tracking-[0.2em] px-2 py-0.5 rounded-md border bg-red-500/10 border-red-500/20 text-red-400">
                                                     CLOSED
                                                 </span>
                                             )}
                                         </div>
                                         <h4 className="text-2xl font-black text-white mt-3 group-hover:text-blue-400 transition-colors truncate pr-12">{job.title}</h4>
-                                        <p className="text-[11px] font-black text-gray-500 uppercase tracking-widest mt-1">{job.company} • {job.location}</p>
+                                        <p className="text-xs font-black text-gray-500 uppercase tracking-widest mt-1">{job.company} • {job.location}</p>
                                     </div>
 
                                     <div className="flex items-center justify-between pt-6 border-t border-white/5">
                                         <div className="space-y-1">
-                                            <p className="text-[11px] font-black text-gray-500 uppercase tracking-tighter">Budget</p>
+                                            <p className="text-xs font-black text-gray-500 uppercase tracking-tighter">Budget</p>
                                             <p className="text-white text-sm font-black italic">{job.stipend}</p>
                                         </div>
                                         <button
                                             onClick={() => viewApplicants(job)}
-                                            className="px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/50 text-white rounded-xl text-[12px] font-black uppercase tracking-widest transition-all shadow-lg"
+                                            className="px-6 py-2.5 bg-white/5 hover:bg-white/10 border border-white/10 hover:border-blue-500/50 text-white rounded-xl text-xs font-black uppercase tracking-widest transition-all shadow-lg"
                                         >
                                             Applicants ({job.applicantCount || 0})
                                         </button>
@@ -483,13 +483,13 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                     <section id="applicant-feed" className="lg:col-span-12 space-y-10 animate-in fade-in slide-in-from-bottom-12 duration-1000 scroll-mt-24">
                         <div className="flex flex-col md:flex-row justify-between items-end gap-6 border-b-2 border-white/10 pb-8">
                             <div className="space-y-2">
-                                <p className="text-[12px] font-black text-green-400 uppercase tracking-[0.5em]">Live Applications</p>
+                                <p className="text-xs font-black text-green-400 uppercase tracking-[0.5em]">Live Applications</p>
                                 <h3 className="text-4xl font-black text-white italic tracking-tighter">{activeJob.title}</h3>
                             </div>
 
                             <div className="flex flex-wrap items-center gap-4 w-full md:w-auto">
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Min Match %</label>
+                                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">Min Match %</label>
                                     <select value={filterMatch} onChange={(e) => setFilterMatch(Number(e.target.value))} className="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white hover:border-blue-500/50 transition-all outline-none">
                                         <option className="bg-slate-900" value="0">All Scores</option>
                                         <option className="bg-slate-900" value="75">75%+ (Strong)</option>
@@ -497,11 +497,11 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                     </select>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Skill Filter</label>
+                                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">Skill Filter</label>
                                     <input type="text" placeholder="Filter by skill..." value={filterSkill} onChange={(e) => setFilterSkill(e.target.value)} className="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white hover:border-blue-500/50 transition-all outline-none w-32" />
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Experience</label>
+                                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">Experience</label>
                                     <select value={filterExperience} onChange={(e) => setFilterExperience(e.target.value)} className="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white hover:border-blue-500/50 transition-all outline-none">
                                         <option className="bg-slate-900" value="All">All Exp</option>
                                         <option className="bg-slate-900" value="Required">Has Experience</option>
@@ -509,17 +509,17 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                     </select>
                                 </div>
                                 <div className="flex flex-col gap-1">
-                                    <label className="text-[9px] font-black text-gray-500 uppercase tracking-widest ml-1">Sort By</label>
+                                    <label className="text-xs font-black text-gray-500 uppercase tracking-widest ml-1">Sort By</label>
                                     <select value={filterSort} onChange={(e) => setFilterSort(e.target.value)} className="bg-black border border-white/10 rounded-xl px-4 py-2 text-xs font-black text-white hover:border-blue-500/50 transition-all outline-none">
                                         <option className="bg-slate-900" value="match">Match Score</option>
                                         <option className="bg-slate-900" value="date">Date Applied</option>
                                     </select>
                                 </div>
                                 <div className="flex gap-2 md:ml-4 mt-auto">
-                                    <button onClick={() => reEvaluateAts(activeJob._id)} className="text-[10px] font-black bg-blue-500/10 px-4 py-3 rounded-2xl border border-blue-500/30 hover:bg-blue-500/20 transition-all uppercase tracking-widest text-blue-400">
+                                    <button onClick={() => reEvaluateAts(activeJob._id)} className="text-xs font-black bg-blue-500/10 px-4 py-3 rounded-2xl border border-blue-500/30 hover:bg-blue-500/20 transition-all uppercase tracking-widest text-blue-400">
                                         Re-evaluate ATS
                                     </button>
-                                    <button onClick={() => setActiveJob(null)} className="text-[12px] font-black bg-white/5 px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 hover:text-white">
+                                    <button onClick={() => setActiveJob(null)} className="text-xs font-black bg-white/5 px-6 py-3 rounded-2xl border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 hover:text-white">
                                         Close Feed
                                     </button>
                                 </div>
@@ -554,7 +554,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                         <div key={app._id} className="card bg-white/5 hover:bg-white/[0.08] border-white/5 group transition-all duration-500 overflow-hidden relative">
                                             {/* Match Score Badge */}
                                             <div className="absolute top-0 right-0 p-4">
-                                                <div className={`px-3 py-1.5 rounded-xl border font-black text-[10px] uppercase tracking-tighter ${app.matchStatus === 'Strong Match' ? 'bg-green-500/20 border-green-500/30 text-green-400' :
+                                                <div className={`px-3 py-1.5 rounded-xl border font-black text-xs uppercase tracking-tighter ${app.matchStatus === 'Strong Match' ? 'bg-green-500/20 border-green-500/30 text-green-400' :
                                                     app.matchStatus === 'Medium Match' ? 'bg-blue-500/20 border-blue-500/30 text-blue-400' :
                                                         'bg-gray-500/20 border-white/10 text-gray-400'
                                                     }`}>
@@ -567,35 +567,35 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                     <div className="flex items-center gap-4 mb-4">
                                                         <div className="w-10 h-10 bg-white/10 rounded-2xl flex items-center justify-center text-lg">👤</div>
                                                         <div>
-                                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-[0.2em]">{app.matchStatus}</p>
+                                                            <p className="text-xs font-black text-gray-500 uppercase tracking-[0.2em]">{app.matchStatus}</p>
                                                         </div>
                                                     </div>
                                                     <h5 className="text-xl font-black text-white group-hover:text-blue-400 transition-colors uppercase tracking-tighter">{app.user.name}</h5>
-                                                    <p className="text-[11px] font-medium text-gray-500 italic mt-1">{app.user.email}</p>
+                                                    <p className="text-xs font-medium text-gray-500 italic mt-1">{app.user.email}</p>
 
                                                     {/* Candidate Summary */}
                                                     {app.aiSummary && (
                                                         <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/10 rounded-xl">
-                                                            <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Professional Insight</p>
-                                                            <p className="text-[11px] text-gray-300 leading-relaxed italic">"{app.aiSummary}"</p>
+                                                            <p className="text-xs font-black text-blue-400 uppercase tracking-widest mb-1">Professional Insight</p>
+                                                            <p className="text-xs text-gray-300 leading-relaxed italic">"{app.aiSummary}"</p>
                                                         </div>
                                                     )}
 
                                                     {/* Match Justification */}
                                                     {app.justification && (
                                                         <div className="mt-4 p-3 bg-purple-500/5 border border-purple-500/10 rounded-xl">
-                                                            <p className="text-[9px] font-black text-purple-400 uppercase tracking-widest mb-1">Matching Justification</p>
-                                                            <p className="text-[11px] text-gray-300 leading-relaxed">{app.justification}</p>
+                                                            <p className="text-xs font-black text-purple-400 uppercase tracking-widest mb-1">Matching Justification</p>
+                                                            <p className="text-xs text-gray-300 leading-relaxed">{app.justification}</p>
                                                         </div>
                                                     )}
 
                                                     {/* Score Breakdown */}
                                                     {app.subScores && (
                                                         <div className="mt-4 space-y-2">
-                                                            <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Match Breakdown</p>
+                                                            <p className="text-xs font-black text-gray-500 uppercase tracking-widest">Match Breakdown</p>
                                                             <div className="grid grid-cols-2 gap-x-4 gap-y-2">
                                                                 <div className="space-y-1">
-                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                    <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
                                                                         <span>Skills</span>
                                                                         <span>{app.subScores.skills}%</span>
                                                                     </div>
@@ -604,7 +604,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="space-y-1">
-                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                    <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
                                                                         <span>Experience</span>
                                                                         <span>{app.subScores.experience}%</span>
                                                                     </div>
@@ -613,7 +613,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="space-y-1">
-                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                    <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
                                                                         <span>Keywords</span>
                                                                         <span>{app.subScores.keywordMatch}%</span>
                                                                     </div>
@@ -622,7 +622,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                                     </div>
                                                                 </div>
                                                                 <div className="space-y-1">
-                                                                    <div className="flex justify-between text-[8px] font-bold uppercase text-gray-500">
+                                                                    <div className="flex justify-between text-xs font-bold uppercase text-gray-500">
                                                                         <span>Education</span>
                                                                         <span>{app.subScores.education}%</span>
                                                                     </div>
@@ -640,10 +640,10 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                             <div className="space-y-4">
                                                                 {app.matchedKeywords && app.matchedKeywords.length > 0 && (
                                                                     <div className="space-y-2">
-                                                                        <p className="text-[9px] font-black text-green-400 uppercase tracking-widest">Matched Requirements</p>
+                                                                        <p className="text-xs font-black text-green-400 uppercase tracking-widest">Matched Requirements</p>
                                                                         <div className="flex flex-wrap gap-1.5">
                                                                             {app.matchedKeywords.slice(0, 6).map(skill => (
-                                                                                <span key={skill} className="px-2 py-0.5 bg-green-500/10 border border-green-500/20 text-[9px] font-black text-green-400 rounded-md uppercase tracking-tighter">
+                                                                                <span key={skill} className="px-2 py-0.5 bg-green-500/10 border border-green-500/20 text-xs font-black text-green-400 rounded-md uppercase tracking-tighter">
                                                                                     {skill}
                                                                                 </span>
                                                                             ))}
@@ -651,10 +651,10 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                                     </div>
                                                                 )}
                                                                 <div className="space-y-2">
-                                                                    <p className="text-[9px] font-black text-red-400 uppercase tracking-widest">Gaps Identified</p>
+                                                                    <p className="text-xs font-black text-red-400 uppercase tracking-widest">Gaps Identified</p>
                                                                     <div className="flex flex-wrap gap-1.5">
                                                                         {app.missingSkills.slice(0, 6).map(skill => (
-                                                                            <span key={skill} className="px-2 py-0.5 bg-red-500/10 border border-red-500/20 text-[9px] font-black text-red-400 rounded-md uppercase tracking-tighter">
+                                                                            <span key={skill} className="px-2 py-0.5 bg-red-500/10 border border-red-500/20 text-xs font-black text-red-400 rounded-md uppercase tracking-tighter">
                                                                                 {skill}
                                                                             </span>
                                                                         ))}
@@ -663,10 +663,10 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                             </div>
                                                         ) : (
                                                             <div className="space-y-2">
-                                                                <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">Key Skills</p>
+                                                                <p className="text-xs font-black text-gray-500 uppercase tracking-widest">Key Skills</p>
                                                                 <div className="flex flex-wrap gap-1.5">
                                                                     {(app.user.skills || []).slice(0, 6).map(skill => (
-                                                                        <span key={skill} className="px-2 py-0.5 bg-white/5 border border-white/5 text-[9px] font-black text-gray-400 rounded-md uppercase tracking-tighter">
+                                                                        <span key={skill} className="px-2 py-0.5 bg-white/5 border border-white/5 text-xs font-black text-gray-400 rounded-md uppercase tracking-tighter">
                                                                             {skill}
                                                                         </span>
                                                                     ))}
@@ -679,7 +679,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                     {app.resumeMeta && (
                                                         <div className="mt-4 pt-4 border-t border-white/5">
                                                             <div className="flex justify-between items-center mb-2">
-                                                                <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest">ATS Profile Strength</p>
+                                                                <p className="text-xs font-black text-gray-500 uppercase tracking-widest">ATS Profile Strength</p>
                                                                 <span className={`text-xs font-black ${(app.resumeMeta.hasExperience ? 25 : 0) + (app.resumeMeta.hasEducation ? 25 : 0) + (app.resumeMeta.hasProjects ? 25 : 0) + ((app.user.skills?.length || 0) >= 5 ? 25 : 0) >= 75 ? 'text-green-400' : 'text-yellow-400'}`}>
                                                                     {(app.resumeMeta.hasExperience ? 25 : 0) + (app.resumeMeta.hasEducation ? 25 : 0) + (app.resumeMeta.hasProjects ? 25 : 0) + ((app.user.skills?.length || 0) >= 5 ? 25 : 0)}/100
                                                                 </span>
@@ -687,19 +687,19 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                             <div className="grid grid-cols-2 gap-2 mt-2">
                                                                 <div className="flex items-center gap-2">
                                                                     <span className={`w-2 h-2 rounded-full ${app.resumeMeta.hasExperience ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                                                                    <span className="text-[9px] font-bold text-gray-500 uppercase">Experience</span>
+                                                                    <span className="text-xs font-bold text-gray-500 uppercase">Experience</span>
                                                                 </div>
                                                                 <div className="flex items-center gap-2">
                                                                     <span className={`w-2 h-2 rounded-full ${app.resumeMeta.hasEducation ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                                                                    <span className="text-[9px] font-bold text-gray-500 uppercase">Education</span>
+                                                                    <span className="text-xs font-bold text-gray-500 uppercase">Education</span>
                                                                 </div>
                                                                 <div className="flex items-center gap-2">
                                                                     <span className={`w-2 h-2 rounded-full ${app.resumeMeta.hasProjects ? 'bg-green-500' : 'bg-red-500'}`}></span>
-                                                                    <span className="text-[9px] font-bold text-gray-500 uppercase">Projects</span>
+                                                                    <span className="text-xs font-bold text-gray-500 uppercase">Projects</span>
                                                                 </div>
                                                                 <div className="flex items-center gap-2">
                                                                     <span className={`w-2 h-2 rounded-full ${(app.user.skills?.length || 0) >= 5 ? 'bg-green-500' : 'bg-yellow-500'}`}></span>
-                                                                    <span className="text-[9px] font-bold text-gray-500 uppercase">Keywords</span>
+                                                                    <span className="text-xs font-bold text-gray-500 uppercase">Keywords</span>
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -709,7 +709,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                 <div className="mt-auto space-y-6">
                                                     <div className="flex justify-between items-center bg-white/5 p-3 rounded-xl border border-white/5">
                                                         <div>
-                                                            <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-1">Status</p>
+                                                            <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Status</p>
                                                             <select
                                                                 value={app.status || 'Applied'}
                                                                 onChange={(e) => updateStatus(app._id, e.target.value)}
@@ -727,17 +727,17 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                                                 <option className="bg-slate-900" value="Rejected">Rejected</option>
                                                             </select>
                                                         </div>
-                                                        <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest">{new Date(app.appliedAt).toLocaleDateString()}</p>
+                                                        <p className="text-xs font-black text-gray-600 uppercase tracking-widest">{new Date(app.appliedAt).toLocaleDateString()}</p>
                                                     </div>
                                                     {app.user.resumePath ? (
                                                         <button
                                                             onClick={() => setViewResume(app.user.resumePath)}
-                                                            className="block w-full text-center py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-[12px] font-black uppercase tracking-[0.2em] transition-all border border-white/10 hover:border-blue-500/50 shadow-xl"
+                                                            className="block w-full text-center py-4 bg-white/5 hover:bg-white/10 text-white rounded-2xl text-xs font-black uppercase tracking-[0.2em] transition-all border border-white/10 hover:border-blue-500/50 shadow-xl"
                                                         >
                                                             View Resume
                                                         </button>
                                                     ) : (
-                                                        <div className="py-4 text-center text-[10px] uppercase tracking-widest text-gray-600 font-black">No Resume</div>
+                                                        <div className="py-4 text-center text-xs uppercase tracking-widest text-gray-600 font-black">No Resume</div>
                                                     )}
                                                 </div>
                                             </div>
@@ -760,7 +760,7 @@ const RecruiterDashboard = ({ onJobCreated }) => {
                                 <a
                                     href={`/uploads/${viewResume}?token=${localStorage.getItem('token')}`}
                                     download
-                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
+                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all"
                                 >
                                     Download PDF
                                 </a>

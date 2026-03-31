@@ -172,7 +172,7 @@ const UserDashboard = () => {
 
                     <div className="flex flex-col md:flex-row gap-8 items-end">
                         <div className="flex-1 w-full group">
-                            <label className="text-[11px] font-black text-gray-500 uppercase tracking-widest block mb-4 ml-1">Attach PDF</label>
+                            <label className="text-xs font-black text-gray-500 uppercase tracking-widest block mb-4 ml-1">Attach PDF</label>
                             <div className="relative">
                                 <input
                                     type="file"
@@ -205,7 +205,7 @@ const UserDashboard = () => {
                                     <div className="flex items-center justify-between mb-6">
                                         <div>
                                             <h3 className="text-xl font-black text-white italic">ATS Profile Strength</h3>
-                                            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Base Resume Evaluation</p>
+                                            <p className="text-xs font-bold text-gray-500 uppercase tracking-widest">Base Resume Evaluation</p>
                                         </div>
                                         <div className="text-right flex flex-col items-end">
                                             <span className={`text-4xl font-black italic tracking-tighter ${(resumeMeta.hasExperience ? 25 : 0) + (resumeMeta.hasEducation ? 25 : 0) + (resumeMeta.hasProjects ? 25 : 0) + (mySkills.length >= 5 ? 25 : 0) >= 75
@@ -215,7 +215,7 @@ const UserDashboard = () => {
                                                 {(resumeMeta.hasExperience ? 25 : 0) + (resumeMeta.hasEducation ? 25 : 0) + (resumeMeta.hasProjects ? 25 : 0) + (mySkills.length >= 5 ? 25 : 0)}/100
                                             </span>
                                             {resumeMeta.aiSummary?.includes('Basic analysis') && (
-                                                <div className="mt-1 px-2 py-0.5 bg-yellow-500/20 border border-yellow-500/30 rounded text-[9px] font-black text-yellow-400 uppercase tracking-widest">
+                                                <div className="mt-1 px-2 py-0.5 bg-yellow-500/20 border border-yellow-500/30 rounded text-xs font-black text-yellow-400 uppercase tracking-widest">
                                                     Basic Mode
                                                 </div>
                                             )}
@@ -231,19 +231,19 @@ const UserDashboard = () => {
 
                                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                                         <div className={`p-3 rounded-xl border ${resumeMeta.hasExperience ? 'bg-green-500/10 border-green-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
-                                            <p className="text-[9px] font-black uppercase tracking-widest mb-1 text-gray-400">Experience</p>
+                                            <p className="text-xs font-black uppercase tracking-widest mb-1 text-gray-400">Experience</p>
                                             <p className={`font-black ${resumeMeta.hasExperience ? 'text-green-400' : 'text-red-400'}`}>{resumeMeta.hasExperience ? 'DETECTED (+25)' : 'MISSING'}</p>
                                         </div>
                                         <div className={`p-3 rounded-xl border ${resumeMeta.hasEducation ? 'bg-green-500/10 border-green-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
-                                            <p className="text-[9px] font-black uppercase tracking-widest mb-1 text-gray-400">Education</p>
+                                            <p className="text-xs font-black uppercase tracking-widest mb-1 text-gray-400">Education</p>
                                             <p className={`font-black ${resumeMeta.hasEducation ? 'text-green-400' : 'text-red-400'}`}>{resumeMeta.hasEducation ? 'DETECTED (+25)' : 'MISSING'}</p>
                                         </div>
                                         <div className={`p-3 rounded-xl border ${resumeMeta.hasProjects ? 'bg-green-500/10 border-green-500/20' : 'bg-red-500/10 border-red-500/20'}`}>
-                                            <p className="text-[9px] font-black uppercase tracking-widest mb-1 text-gray-400">Projects</p>
+                                            <p className="text-xs font-black uppercase tracking-widest mb-1 text-gray-400">Projects</p>
                                             <p className={`font-black ${resumeMeta.hasProjects ? 'text-green-400' : 'text-red-400'}`}>{resumeMeta.hasProjects ? 'DETECTED (+25)' : 'MISSING'}</p>
                                         </div>
                                         <div className={`p-3 rounded-xl border ${mySkills.length >= 5 ? 'bg-green-500/10 border-green-500/20' : 'bg-yellow-500/10 border-yellow-500/20'}`}>
-                                            <p className="text-[9px] font-black uppercase tracking-widest mb-1 text-gray-400">Keywords</p>
+                                            <p className="text-xs font-black uppercase tracking-widest mb-1 text-gray-400">Keywords</p>
                                             <p className={`font-black ${mySkills.length >= 5 ? 'text-green-400' : 'text-yellow-400'}`}>{mySkills.length} Found {mySkills.length >= 5 ? '(+25)' : ''}</p>
                                         </div>
                                     </div>
@@ -251,10 +251,10 @@ const UserDashboard = () => {
                             )}
 
                             <div>
-                                <p className="text-[11px] font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Keywords Found</p>
+                                <p className="text-xs font-black text-gray-400 uppercase tracking-[0.3em] mb-4">Keywords Found</p>
                                 <div className="flex flex-wrap gap-2">
                                     {mySkills.map(tag => (
-                                        <span key={tag} className="px-3 py-1.5 bg-white/5 border border-white/10 text-white text-[11px] font-black rounded-lg uppercase tracking-tighter">
+                                        <span key={tag} className="px-3 py-1.5 bg-white/5 border border-white/10 text-white text-xs font-black rounded-lg uppercase tracking-tighter">
                                             #{tag}
                                         </span>
                                     ))}
@@ -270,19 +270,19 @@ const UserDashboard = () => {
                 <section className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 animate-in fade-in zoom-in duration-700">
                     <div className="card bg-blue-500/5 border-blue-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-blue-500/10 transition-all">
                         <span className="text-3xl md:text-4xl font-black text-blue-400 mb-2">{appSummary?.totalApplications || myApps.length}</span>
-                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Total Applied</p>
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Total Applied</p>
                     </div>
                     <div className="card bg-purple-500/5 border-purple-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-purple-500/10 transition-all">
                         <span className="text-3xl md:text-4xl font-black text-purple-400 mb-2">{appSummary?.averageScore || 0}%</span>
-                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Avg ATS Score</p>
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Avg ATS Score</p>
                     </div>
                     <div className="card bg-green-500/5 border-green-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-green-500/10 transition-all">
                         <span className="text-3xl md:text-4xl font-black text-green-400 mb-2">{appSummary?.shortlistedCount || myApps.filter(a => ['Shortlisted', 'Interviewed'].includes(a.status)).length}</span>
-                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Shortlisted</p>
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Shortlisted</p>
                     </div>
                     <div className="card bg-yellow-500/5 border-yellow-500/10 flex flex-col items-center justify-center p-6 text-center group hover:bg-yellow-500/10 transition-all">
                         <span className="text-3xl md:text-4xl font-black text-yellow-400 mb-2">{appSummary?.profileStrength || (mySkills.length > 0 ? 75 : 0)}%</span>
-                        <p className="text-[9px] md:text-[10px] font-black text-gray-400 uppercase tracking-widest">Profile Strength</p>
+                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Profile Strength</p>
                     </div>
                 </section>
             )}
@@ -293,11 +293,11 @@ const UserDashboard = () => {
                     <div className="flex flex-col sm:flex-row items-end sm:items-center justify-between border-b border-white/5 pb-6 gap-4">
                         <h2 className="text-3xl font-black text-white">Your Feed</h2>
                         <div className="flex items-center gap-4">
-                            <button onClick={loadJobs} className="text-[11px] font-black bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 hover:text-white">Refresh List</button>
+                            <button onClick={loadJobs} className="text-xs font-black bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 hover:text-white">Refresh List</button>
                             <select
                                 value={filterType}
                                 onChange={(e) => setFilterType(e.target.value)}
-                                className="text-[11px] font-black bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 focus:text-white outline-none cursor-pointer appearance-none"
+                                className="text-xs font-black bg-white/5 px-4 py-2 rounded-full border border-white/10 hover:bg-white/10 transition-all uppercase tracking-widest text-gray-400 focus:text-white outline-none cursor-pointer appearance-none"
                             >
                                 <option className="bg-[#0A0A0A]" value="All">All Types</option>
                                 <option className="bg-[#0A0A0A]" value="Full-time">Full-time</option>
@@ -338,9 +338,9 @@ const UserDashboard = () => {
                                             <div>
                                                 <div className="flex items-center gap-3 mb-2">
                                                     <h3 className="text-2xl font-black text-white">{row.title}</h3>
-                                                    <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20 uppercase tracking-widest">{row.jobType}</span>
+                                                    <span className="text-xs font-black px-2 py-0.5 rounded-md bg-blue-500/10 text-blue-300 border border-blue-500/20 uppercase tracking-widest">{row.jobType}</span>
                                                     {history.has(row._id) && (
-                                                        <span className="text-[10px] font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-tighter">
+                                                        <span className="text-xs font-black px-2 py-0.5 rounded-md bg-green-500/10 text-green-400 border border-green-500/20 uppercase tracking-tighter">
                                                             {myApps.find(a => a.job?._id === row._id)?.status || 'Applied'}
                                                         </span>
                                                     )}
@@ -360,10 +360,10 @@ const UserDashboard = () => {
 
                                                 {row.requiredSkills && row.requiredSkills.length > 0 && (
                                                     <div className="mt-4 space-y-2">
-                                                        <p className="text-[10px] font-black text-gray-500 uppercase tracking-widest">Required Skills</p>
+                                                        <p className="text-xs font-black text-gray-500 uppercase tracking-widest">Required Skills</p>
                                                         <div className="flex flex-wrap gap-2">
                                                             {row.requiredSkills.map((skill, idx) => (
-                                                                <span key={idx} className="px-2 py-1 bg-white/5 border border-white/10 text-[10px] font-black text-gray-300 rounded-md uppercase tracking-tighter shadow-sm">
+                                                                <span key={idx} className="px-2 py-1 bg-white/5 border border-white/10 text-xs font-black text-gray-300 rounded-md uppercase tracking-tighter shadow-sm">
                                                                     {skill}
                                                                 </span>
                                                             ))}
@@ -376,14 +376,14 @@ const UserDashboard = () => {
                                         <div className="flex flex-col gap-3 md:w-48">
                                             <button
                                                 onClick={() => checkFit(row._id)}
-                                                className={`w-full px-4 py-3 rounded-2xl text-[11px] font-black tracking-widest uppercase transition-all shadow-xl ${activeId === row._id && score ? 'bg-blue-500/20 border-blue-500/40 text-blue-300' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-white'}`}
+                                                className={`w-full px-4 py-3 rounded-2xl text-xs font-black tracking-widest uppercase transition-all shadow-xl ${activeId === row._id && score ? 'bg-blue-500/20 border-blue-500/40 text-blue-300' : 'bg-white/5 hover:bg-white/10 border border-white/10 text-white'}`}
                                             >
                                                 {activeId === row._id && score ? 'Show Metric' : 'Check Quality'}
                                             </button>
                                             <button
                                                 onClick={() => apply(row._id)}
                                                 disabled={history.has(row._id) || applying.has(row._id)}
-                                                className={`w-full px-4 py-3 rounded-2xl text-[11px] font-black tracking-widest uppercase transition-all shadow-2xl ${history.has(row._id)
+                                                className={`w-full px-4 py-3 rounded-2xl text-xs font-black tracking-widest uppercase transition-all shadow-2xl ${history.has(row._id)
                                                     ? 'bg-green-500/10 border border-green-500/30 text-green-400 cursor-not-allowed'
                                                     : applying.has(row._id)
                                                         ? 'bg-blue-600/10 border border-blue-500/30 text-blue-400 cursor-wait'
@@ -398,7 +398,7 @@ const UserDashboard = () => {
                                                         e.stopPropagation();
                                                         setViewJd(row.jdPath);
                                                     }}
-                                                    className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white text-[11px] font-black uppercase tracking-widest rounded-2xl border border-white/10 transition-all flex items-center gap-3 shadow-xl group/jd"
+                                                    className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-2xl border border-white/10 transition-all flex items-center gap-3 shadow-xl group/jd"
                                                 >
                                                     <span className="text-lg group-hover/jd:scale-110 transition-transform">📄</span>
                                                     <span>View JD</span>
@@ -418,29 +418,29 @@ const UserDashboard = () => {
                                                         {score.score}%
                                                     </div>
                                                     <div className="space-y-1">
-                                                        <p className={`text-[11px] font-black uppercase tracking-[0.3em] px-3 py-1 rounded-lg border inline-block ${score.status === 'Strong Match' ? 'bg-green-500/20 border-green-500/30 text-green-400' : score.status === 'Medium Match' ? 'bg-blue-500/20 border-blue-500/30 text-blue-400' : 'bg-red-500/20 border-red-500/30 text-red-400'}`}>
+                                                        <p className={`text-xs font-black uppercase tracking-[0.3em] px-3 py-1 rounded-lg border inline-block ${score.status === 'Strong Match' ? 'bg-green-500/20 border-green-500/30 text-green-400' : score.status === 'Medium Match' ? 'bg-blue-500/20 border-blue-500/30 text-blue-400' : 'bg-red-500/20 border-red-500/30 text-red-400'}`}>
                                                             {score.status}
                                                         </p>
-                                                        <p className="text-[11px] font-black text-gray-500 uppercase tracking-[0.3em]">ATS Match Score</p>
+                                                        <p className="text-xs font-black text-gray-500 uppercase tracking-[0.3em]">ATS Match Score</p>
                                                     </div>
                                                 </div>
                                             </div>
 
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
                                                 <div className="space-y-4">
-                                                    <p className="text-[11px] font-black text-green-400 uppercase tracking-widest">Strengths</p>
+                                                    <p className="text-xs font-black text-green-400 uppercase tracking-widest">Strengths</p>
                                                     <div className="flex flex-wrap gap-2">
                                                         {score.matched_keywords && score.matched_keywords.map((s, idx) => (
-                                                            <span key={`matched-${idx}`} className="px-3 py-1.5 bg-green-400/10 text-green-300 text-[11px] font-black rounded-lg uppercase tracking-tighter">{s}</span>
+                                                            <span key={`matched-${idx}`} className="px-3 py-1.5 bg-green-400/10 text-green-300 text-xs font-black rounded-lg uppercase tracking-tighter">{s}</span>
                                                         ))}
                                                         {(!score.matched_keywords || score.matched_keywords.length === 0) && <span className="text-gray-600 italic text-xs">No direct hits</span>}
                                                     </div>
                                                 </div>
                                                 <div className="space-y-4">
-                                                    <p className="text-[11px] font-black text-red-500 uppercase tracking-widest">Skill Gaps</p>
+                                                    <p className="text-xs font-black text-red-500 uppercase tracking-widest">Skill Gaps</p>
                                                     <div className="flex flex-wrap gap-2">
                                                         {score.missingSkills && score.missingSkills.map((s, idx) => (
-                                                            <span key={`missing-${idx}`} className="px-3 py-1.5 bg-red-400/10 text-red-400 text-[11px] font-black rounded-lg uppercase tracking-tighter">{s}</span>
+                                                            <span key={`missing-${idx}`} className="px-3 py-1.5 bg-red-400/10 text-red-400 text-xs font-black rounded-lg uppercase tracking-tighter">{s}</span>
                                                         ))}
                                                         {(!score.missingSkills || score.missingSkills.length === 0) && <span className="text-gray-600 italic text-xs">Perfect match</span>}
                                                     </div>
@@ -451,19 +451,19 @@ const UserDashboard = () => {
                                             {score.subScores && (
                                                 <div className="mt-8 grid grid-cols-4 gap-4">
                                                     <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
-                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Formatting</p>
+                                                        <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Formatting</p>
                                                         <p className="text-lg font-black text-white">{score.subScores.formatting}%</p>
                                                     </div>
                                                     <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
-                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Experience</p>
+                                                        <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Experience</p>
                                                         <p className="text-lg font-black text-white">{score.subScores.experience}%</p>
                                                     </div>
                                                     <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
-                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Keywords</p>
+                                                        <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Keywords</p>
                                                         <p className="text-lg font-black text-white">{score.subScores.keywordMatch || score.subScores.projects}%</p>
                                                     </div>
                                                     <div className="p-3 bg-white/5 border border-white/10 rounded-xl text-center">
-                                                        <p className="text-[9px] font-black text-gray-500 uppercase tracking-widest mb-1">Education</p>
+                                                        <p className="text-xs font-black text-gray-500 uppercase tracking-widest mb-1">Education</p>
                                                         <p className="text-lg font-black text-white">{score.subScores.education}%</p>
                                                     </div>
                                                 </div>
@@ -473,7 +473,7 @@ const UserDashboard = () => {
                                             <div className="mt-10 p-6 bg-blue-500/5 border border-blue-500/10 rounded-3xl animate-in zoom-in-95 duration-500">
                                                 <div className="flex items-center gap-3 mb-4">
                                                     <span className="text-xl">💡</span>
-                                                    <p className="text-[11px] font-black text-blue-400 uppercase tracking-widest">Growth Plan to 100%</p>
+                                                    <p className="text-xs font-black text-blue-400 uppercase tracking-widest">Growth Plan to 100%</p>
                                                 </div>
                                                 <p className="text-sm text-gray-400 leading-relaxed mb-4">
                                                     {score.justification}
@@ -508,7 +508,7 @@ const UserDashboard = () => {
                     <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
                         <div className="space-y-2">
                             <h2 className="text-4xl font-black text-white italic tracking-tighter">APPLIED PORTAL</h2>
-                            <p className="text-gray-500 text-[11px] font-bold uppercase tracking-[0.3em] flex items-center gap-3">
+                            <p className="text-gray-500 text-xs font-bold uppercase tracking-[0.3em] flex items-center gap-3">
                                 <span className="w-12 h-px bg-white/10"></span>
                                 Verified Professional History
                             </p>
@@ -527,7 +527,7 @@ const UserDashboard = () => {
                             <div key={company} className="space-y-8">
                                 <div className="flex items-center gap-4">
                                     <div className="h-px flex-1 bg-white/5"></div>
-                                    <h3 className="text-[11px] font-black text-blue-400 uppercase tracking-[0.4em]">{company}</h3>
+                                    <h3 className="text-xs font-black text-blue-400 uppercase tracking-[0.4em]">{company}</h3>
                                     <div className="h-px flex-1 bg-white/5"></div>
                                 </div>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -536,11 +536,11 @@ const UserDashboard = () => {
                                             <div className="absolute top-0 right-0 p-4 flex flex-col items-end gap-2">
                                                 <div className="flex items-center gap-2 px-3 py-1 bg-white/5 border border-white/10 rounded-lg">
                                                     <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${app.status === 'Shortlisted' ? 'bg-purple-400' : app.status === 'Rejected' ? 'bg-red-400' : 'bg-blue-400'}`}></div>
-                                                    <span className={`text-[10px] font-black uppercase tracking-widest ${app.status === 'Shortlisted' ? 'text-purple-400' : app.status === 'Rejected' ? 'text-red-400' : 'text-blue-400'}`}>
+                                                    <span className={`text-xs font-black uppercase tracking-widest ${app.status === 'Shortlisted' ? 'text-purple-400' : app.status === 'Rejected' ? 'text-red-400' : 'text-blue-400'}`}>
                                                         {app.status}
                                                     </span>
                                                 </div>
-                                                <div className="px-2 py-1 bg-white/5 border border-white/5 rounded text-[10px] font-black italic flex items-center gap-2">
+                                                <div className="px-2 py-1 bg-white/5 border border-white/5 rounded text-xs font-black italic flex items-center gap-2">
                                                     <span className={`${app.matchScore >= 75 ? 'text-green-400' : app.matchScore >= 40 ? 'text-blue-400' : 'text-yellow-400'}`}>
                                                         Match Score: {app.matchScore || 0}%
                                                     </span>
@@ -554,28 +554,28 @@ const UserDashboard = () => {
                                                         {app.job?.title || 'System Archive'}
                                                     </h4>
                                                     <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-                                                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1">
-                                                            <span className="opacity-50 text-[12px]">🏢</span> {app.job?.company}
+                                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                                                            <span className="opacity-50 text-xs">🏢</span> {app.job?.company}
                                                         </p>
-                                                        <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest flex items-center gap-1">
-                                                            <span className="opacity-50 text-[12px]">📍</span> {app.job?.location}
+                                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest flex items-center gap-1">
+                                                            <span className="opacity-50 text-xs">📍</span> {app.job?.location}
                                                         </p>
                                                     </div>
                                                 </div>
 
                                                 {app.justification && (
                                                     <div className="mt-4 p-3 bg-blue-500/5 border border-blue-500/10 rounded-xl">
-                                                        <p className="text-[9px] font-black text-blue-400 uppercase tracking-widest mb-1">Match Justification</p>
-                                                        <p className="text-[11px] text-gray-300 leading-relaxed italic">"{app.justification}"</p>
+                                                        <p className="text-xs font-black text-blue-400 uppercase tracking-widest mb-1">Match Justification</p>
+                                                        <p className="text-xs text-gray-300 leading-relaxed italic">"{app.justification}"</p>
                                                     </div>
                                                 )}
 
                                                 {app.matchedKeywords && app.matchedKeywords.length > 0 && (
                                                     <div className="mt-3 space-y-1">
-                                                        <p className="text-[9px] font-black text-green-400 uppercase tracking-widest">Matched Skills</p>
+                                                        <p className="text-xs font-black text-green-400 uppercase tracking-widest">Matched Skills</p>
                                                         <div className="flex flex-wrap gap-1">
                                                             {app.matchedKeywords.slice(0, 5).map(skill => (
-                                                                <span key={skill} className="px-1.5 py-0.5 bg-green-500/10 border border-green-500/20 text-[9px] font-black text-green-400 rounded-md uppercase tracking-tighter">
+                                                                <span key={skill} className="px-1.5 py-0.5 bg-green-500/10 border border-green-500/20 text-xs font-black text-green-400 rounded-md uppercase tracking-tighter">
                                                                     {skill}
                                                                 </span>
                                                             ))}
@@ -585,10 +585,10 @@ const UserDashboard = () => {
 
                                                 {app.missingSkills && app.missingSkills.length > 0 && (
                                                     <div className="mt-2 space-y-1">
-                                                        <p className="text-[9px] font-black text-red-400 uppercase tracking-widest">Skill Gaps</p>
+                                                        <p className="text-xs font-black text-red-400 uppercase tracking-widest">Skill Gaps</p>
                                                         <div className="flex flex-wrap gap-1">
                                                             {app.missingSkills.slice(0, 5).map(skill => (
-                                                                <span key={skill} className="px-1.5 py-0.5 bg-red-500/10 border border-red-500/20 text-[9px] font-black text-red-400 rounded-md uppercase tracking-tighter">
+                                                                <span key={skill} className="px-1.5 py-0.5 bg-red-500/10 border border-red-500/20 text-xs font-black text-red-400 rounded-md uppercase tracking-tighter">
                                                                     {skill}
                                                                 </span>
                                                             ))}
@@ -598,12 +598,12 @@ const UserDashboard = () => {
 
                                                 <div className="flex items-center justify-between pt-4 border-t border-white/5">
                                                     <div className="space-y-1">
-                                                        <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest">Budget</p>
+                                                        <p className="text-xs font-black text-gray-600 uppercase tracking-widest">Budget</p>
                                                         <p className="text-white text-xs font-black">{app.job?.stipend}</p>
                                                     </div>
                                                     <div className="text-right">
-                                                        <p className="text-[10px] font-black text-gray-600 uppercase tracking-widest mb-1">Timeline</p>
-                                                        <div className="text-[11px] font-black text-gray-500 uppercase tracking-widest">
+                                                        <p className="text-xs font-black text-gray-600 uppercase tracking-widest mb-1">Timeline</p>
+                                                        <div className="text-xs font-black text-gray-500 uppercase tracking-widest">
                                                             {new Date(app.appliedAt).toLocaleDateString()}
                                                         </div>
                                                     </div>
@@ -628,7 +628,7 @@ const UserDashboard = () => {
                                 <a
                                     href={`/uploads/${viewJd}?token=${localStorage.getItem('token')}`}
                                     download
-                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-[10px] font-black uppercase tracking-widest rounded-xl transition-all"
+                                    className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all"
                                 >
                                     Download PDF
                                 </a>

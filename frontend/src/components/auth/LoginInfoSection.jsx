@@ -5,7 +5,7 @@ const LoginInfoSection = () => {
         <div className="flex-1 flex flex-col justify-center space-y-10 lg:pr-12 text-center lg:text-left mb-12 lg:mb-0">
             <div className="space-y-4">
                 <div className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-2">
-                    <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.4em]">SmartHire AI</span>
+                    <span className="text-xs font-black text-blue-400 uppercase tracking-[0.4em]">SmartHire AI</span>
                 </div>
                 <h1 className="text-4xl md:text-5xl font-black text-white italic tracking-tighter leading-tight">
                     AI-Powered <br className="hidden lg:block"/>
@@ -42,7 +42,7 @@ const LoginInfoSection = () => {
                 <div className="relative z-10 space-y-6">
                     <div className="flex items-center justify-between border-b border-white/5 pb-4">
                         <div>
-                            <span className="text-[10px] font-black text-gray-500 uppercase tracking-widest block">Analysis Result</span>
+                            <span className="text-xs font-black text-gray-500 uppercase tracking-widest block">Analysis Result</span>
                             <span className="text-xl font-black text-white italic tracking-tighter">Candidate Fit</span>
                         </div>
                         <div className="px-4 py-1.5 bg-green-500/10 border border-green-500/30 text-green-400 rounded-xl text-lg font-black italic shadow-[0_0_20px_rgba(34,197,94,0.1)]">
@@ -59,7 +59,7 @@ const LoginInfoSection = () => {
                             { label: 'Education', value: 100, color: 'bg-green-400' }
                         ].map((sub, i) => (
                             <div key={i} className="space-y-1">
-                                <div className="flex justify-between text-[8px] font-black uppercase text-gray-500 tracking-tighter">
+                                <div className="flex justify-between text-xs font-black uppercase text-gray-500 tracking-tighter">
                                     <span>{sub.label}</span>
                                     <span>{sub.value}%</span>
                                 </div>
@@ -72,11 +72,11 @@ const LoginInfoSection = () => {
 
                     <div className="space-y-4 pt-2">
                         <div className="flex flex-wrap gap-2">
-                            <span className="px-2 py-1 bg-green-500/10 border border-green-500/20 text-[9px] font-black rounded uppercase text-green-400">React Expert</span>
-                            <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-[9px] font-black rounded uppercase text-blue-400">Full Stack</span>
+                            <span className="px-2 py-1 bg-green-500/10 border border-green-500/20 text-xs font-black rounded uppercase text-green-400">React Expert</span>
+                            <span className="px-2 py-1 bg-blue-500/10 border border-blue-500/20 text-xs font-black rounded uppercase text-blue-400">Full Stack</span>
                         </div>
                         <div className="p-3 bg-white/5 rounded-xl border border-white/5">
-                            <p className="text-[10px] text-gray-400 italic leading-relaxed">"Strong technical alignment. Focus on cloud infrastructure to unlock senior-level matching."</p>
+                            <p className="text-xs text-gray-400 italic leading-relaxed">"Strong technical alignment. Focus on cloud infrastructure to unlock senior-level matching."</p>
                         </div>
                     </div>
                 </div>

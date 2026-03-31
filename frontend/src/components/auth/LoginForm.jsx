@@ -15,10 +15,10 @@ const LoginForm = ({ onLogin, onGoogleSuccess, error, mounted, email, setEmail, 
                 <div className="relative z-10">
                     <header className="text-center mb-10">
                         <div className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-4">
-                            <span className="text-[10px] font-black text-purple-400 uppercase tracking-[0.4em]">Login</span>
+                            <span className="text-xs font-black text-purple-400 uppercase tracking-[0.4em]">Login</span>
                         </div>
                         <h2 className="text-3xl font-black text-white italic tracking-tighter mb-2">Welcome Back</h2>
-                        <p className="text-gray-500 text-[11px] font-bold uppercase tracking-widest opacity-60">Authorize your secure session</p>
+                        <p className="text-xs font-bold text-gray-500 uppercase tracking-widest opacity-60">Authorize your secure session</p>
                     </header>
 
                     <div className={`transition-all duration-700 delay-75 mb-6 flex justify-center ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}`}>
@@ -34,14 +34,14 @@ const LoginForm = ({ onLogin, onGoogleSuccess, error, mounted, email, setEmail, 
 
                     <div className={`flex items-center gap-4 mb-6 opacity-40 transition-all duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
                         <div className="flex-1 h-px bg-white/20"></div>
-                        <span className="text-[10px] uppercase font-bold tracking-widest text-white/50">or login with email</span>
+                        <span className="text-xs uppercase font-bold tracking-widest text-white/50">or login with email</span>
                         <div className="flex-1 h-px bg-white/20"></div>
                     </div>
 
                     <form onSubmit={onLogin} className="space-y-6">
                         <div className="space-y-5">
                             <div className={`transition-all duration-700 delay-100 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                                <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1 transition-colors group-focus-within:text-white">Email Address</label>
+                                <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1 transition-colors group-focus-within:text-white">Email Address</label>
                                 <div className="relative group/input">
                                     <input
                                         type="email"
@@ -57,8 +57,8 @@ const LoginForm = ({ onLogin, onGoogleSuccess, error, mounted, email, setEmail, 
 
                             <div className={`transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
                                 <div className="flex items-center justify-between mb-2">
-                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest ml-1 transition-colors group-focus-within:text-white">Password</label>
-                                    <a href="#" className="text-[10px] font-medium text-gray-500 hover:text-purple-400 transition-colors">Forgot Password?</a>
+                                    <label className="block text-xs font-black text-gray-500 uppercase tracking-widest ml-1 transition-colors group-focus-within:text-white">Password</label>
+                                    <a href="#" className="text-xs font-medium text-gray-500 hover:text-purple-400 transition-colors">Forgot Password?</a>
                                 </div>
                                 
                                 <div className="relative group/input">
@@ -91,21 +91,21 @@ const LoginForm = ({ onLogin, onGoogleSuccess, error, mounted, email, setEmail, 
                                     onChange={() => setRememberMe(!rememberMe)}
                                 />
                                 <div className={`w-4 h-4 rounded flex items-center justify-center border transition-all ${rememberMe ? 'bg-purple-500 border-purple-500' : 'bg-black border-white/20 group-hover/cb:border-white/40'}`}>
-                                    {rememberMe && <span className="text-white text-[10px]">✓</span>}
+                                    {rememberMe && <span className="text-white text-xs">✓</span>}
                                 </div>
-                                <span className="text-[10px] font-medium text-gray-400 group-hover/cb:text-gray-300">Remember device</span>
+                                <span className="text-xs font-medium text-gray-400 group-hover/cb:text-gray-300">Remember device</span>
                             </label>
                         </div>
 
                         {error && (
-                            <div className="bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-xl text-[11px] font-black uppercase text-red-400 text-center tracking-widest animate-in fade-in zoom-in duration-300">
+                            <div className="bg-red-500/10 border border-red-500/20 px-4 py-3 rounded-xl text-xs font-black uppercase text-red-400 text-center tracking-widest animate-in fade-in zoom-in duration-300">
                                 {error.includes('credentials') || error.includes('password') || error.includes('email') ? 'Invalid email or password. Please try again.' : error}
                             </div>
                         )}
 
                         <button
                             type="submit"
-                            className="group/btn relative w-full h-14 bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.4em] text-[11px] rounded-xl transition-all hover:tracking-[0.5em] hover:bg-white/10 active:scale-[0.98] overflow-hidden shadow-2xl"
+                            className="group/btn relative w-full h-14 bg-white/5 border border-white/10 text-white font-black uppercase tracking-[0.4em] text-xs rounded-xl transition-all hover:tracking-[0.5em] hover:bg-white/10 active:scale-[0.98] overflow-hidden shadow-2xl"
                         >
                             <div className="absolute inset-0 bg-purple-500 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 opacity-20"></div>
                             <span className="relative z-10 flex items-center justify-center gap-3">
@@ -116,7 +116,7 @@ const LoginForm = ({ onLogin, onGoogleSuccess, error, mounted, email, setEmail, 
                     </form>
 
                     <footer className="mt-8 text-center pt-6 border-t border-white/5">
-                        <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">
+                        <p className="text-gray-500 text-xs font-black uppercase tracking-widest">
                             New Identity? <Link to="/register" className="text-white hover:text-purple-500 transition-colors ml-1">Register</Link>
                         </p>
                     </footer>

@@ -20,15 +20,15 @@ const Footer = () => {
                             AI-powered resume analysis and smart hiring platform built for students, job seekers, and recruiters. Analyze resumes, identify skill gaps, and match with the right opportunities.
                         </p>
                         <div className="flex gap-3 pt-2">
-                            <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[9px] font-black uppercase tracking-widest rounded-full">AI Powered</span>
-                            <span className="px-3 py-1 bg-green-500/10 border border-green-500/20 text-green-400 text-[9px] font-black uppercase tracking-widest rounded-full">ATS Ready</span>
-                            <span className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[9px] font-black uppercase tracking-widest rounded-full">Free Demo</span>
+                            <span className="px-3 py-1 bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-black uppercase tracking-widest rounded-full">AI Powered</span>
+                            <span className="px-3 py-1 bg-green-500/10 border border-green-500/20 text-green-400 text-xs font-black uppercase tracking-widest rounded-full">ATS Ready</span>
+                            <span className="px-3 py-1 bg-purple-500/10 border border-purple-500/20 text-purple-400 text-xs font-black uppercase tracking-widest rounded-full">Free Demo</span>
                         </div>
                     </div>
 
                     {/* Platform */}
                     <div className="space-y-4">
-                        <h4 className="text-white font-black text-[10px] uppercase tracking-[0.3em]">Platform</h4>
+                        <h4 className="text-white font-black text-xs uppercase tracking-[0.3em]">Platform</h4>
                         <ul className="space-y-3">
                             <li><Link to="/" className="text-gray-500 hover:text-white text-xs font-bold transition-colors">Home</Link></li>
                             <li><Link to="/demo" className="text-gray-500 hover:text-white text-xs font-bold transition-colors">Try Demo</Link></li>
@@ -40,7 +40,7 @@ const Footer = () => {
 
                     {/* Contact */}
                     <div className="space-y-4">
-                        <h4 className="text-white font-black text-[10px] uppercase tracking-[0.3em]">Contact</h4>
+                        <h4 className="text-white font-black text-xs uppercase tracking-[0.3em]">Contact</h4>
                         <ul className="space-y-3">
                             <li>
                                 <a href="mailto:support@smarthire.ai" className="text-gray-500 hover:text-white text-xs font-bold transition-colors">
@@ -60,24 +60,24 @@ const Footer = () => {
                 <div className="grid grid-cols-3 gap-4 py-6 border-y border-white/5">
                     <div className="text-center">
                         <div className="text-2xl font-black text-white italic">10k+</div>
-                        <div className="text-[9px] font-black uppercase tracking-widest text-gray-500 mt-1">Analyses Done</div>
+                        <div className="text-xs font-black uppercase tracking-widest text-gray-500 mt-1">Analyses Done</div>
                     </div>
                     <div className="text-center border-x border-white/5">
                         <div className="text-2xl font-black text-white italic">90%</div>
-                        <div className="text-[9px] font-black uppercase tracking-widest text-gray-500 mt-1">Match Accuracy</div>
+                        <div className="text-xs font-black uppercase tracking-widest text-gray-500 mt-1">Match Accuracy</div>
                     </div>
                     <div className="text-center">
                         <div className="text-2xl font-black text-white italic">4.9/5</div>
-                        <div className="text-[9px] font-black uppercase tracking-widest text-gray-500 mt-1">User Rating</div>
+                        <div className="text-xs font-black uppercase tracking-widest text-gray-500 mt-1">User Rating</div>
                     </div>
                 </div>
 
                 {/* Bottom Bar */}
                 <div className="flex flex-col md:flex-row items-center justify-between gap-3">
-                    <p className="text-gray-600 text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-left">
+                    <p className="text-gray-600 text-xs font-black uppercase tracking-[0.2em] text-center md:text-left">
                         &copy; {currentYear} Rahul Dhakad. All rights reserved. Built with ❤️
                     </p>
-                    <p className="text-gray-700 text-[10px] font-black uppercase tracking-widest">
+                    <p className="text-gray-700 text-xs font-black uppercase tracking-widest">
                         Powered by Gemini AI
                     </p>
                 </div>

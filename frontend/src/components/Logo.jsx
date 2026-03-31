@@ -1,24 +1,45 @@
 const Logo = ({ className = "" }) => {
     return (
-        <div className={`flex items-center gap-3 ${className} cursor-pointer group`}>
-            {/* Glass Icon */}
-            <div className="relative w-9 h-9 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center backdrop-blur-md shadow-lg group-hover:border-blue-500/40 group-hover:bg-white/10 transition-all duration-300">
-                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5" xmlns="http://www.w3.org/2000/svg">
-                    {/* Brain */}
-                    <path d="M9 3C7.3 3 6 4.3 6 6C4.7 6 3.5 7.2 3.5 8.5C3.5 9.8 4.3 10.9 5.5 11.4C5.5 13 6.6 14.3 8 14.7V17H10V14.8C11.1 14.5 12 13.6 12 12.5V11C13 11.3 14 10.8 14.5 9.9C15.3 10.1 16.2 9.5 16.5 8.7C17.1 8.4 17.5 7.8 17.5 7C17.5 6 16.7 5.2 15.7 5.1C15.4 3.9 14.3 3 13 3C12 3 11.1 3.5 10.5 4.2C10.1 3.5 9.6 3 9 3Z"
-                        stroke="#60a5fa" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-                    {/* Checkmark */}
-                    <path d="M8 8.5L9.8 10.5L14 6.5"
-                        stroke="#34d399" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"/>
+        <div className={`flex items-center gap-3.5 ${className} cursor-pointer group`}>
+            {/* Geometric SH Monogram */}
+            <div className="relative">
+                <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
+                    className="w-12 h-12 group-hover:scale-110 transition-all duration-500 ease-out drop-shadow-[0_0_12px_rgba(96,165,250,0.4)]">
+                    
+                    {/* Background Hexagon Glow */}
+                    <path 
+                        d="M50 5 L89 27.5 V72.5 L50 95 L11 72.5 V27.5 L50 5Z" 
+                        className="fill-blue-500/10 stroke-blue-500/30" 
+                        strokeWidth="1"
+                    />
+
+                    {/* SH geometric lines */}
+                    <g fill="none" stroke="currentColor" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" className="text-white">
+                        {/* Left Vertical of H */}
+                        <path d="M30 30 V70" className="group-hover:stroke-blue-400 transition-colors duration-300" strokeWidth="9" />
+                        {/* Right Vertical of H */}
+                        <path d="M70 30 V70" className="group-hover:stroke-blue-400 transition-colors duration-300" strokeWidth="9" />
+                        {/* S shape connecting */}
+                        <path d="M30 30 H70 L30 50 H70 L30 70 H70" 
+                            className="stroke-blue-400 group-hover:stroke-white transition-colors duration-300"
+                            strokeWidth="8"
+                        />
+                    </g>
+
+                    {/* Accent detail */}
+                    <circle cx="50" cy="50" r="2.5" className="fill-blue-400 animate-pulse" />
                 </svg>
+                
+                {/* Outer decorative ring */}
+                <div className="absolute inset-0 border border-white/10 rounded-xl rotate-45 scale-75 group-hover:rotate-90 group-hover:scale-100 transition-all duration-700"></div>
             </div>
 
-            {/* Text */}
             <div className="flex flex-col leading-none">
-                <span className="text-white font-black tracking-tight text-base uppercase italic">
-                    Smart<span className="text-blue-400">Hire</span> AI
+                <span className="text-white font-black tracking-tight text-xl uppercase italic flex items-baseline gap-1">
+                    Smart<span className="text-blue-400">Hire</span>
+                    <span className="text-[11px] not-italic ml-1 opacity-50 font-medium tracking-normal text-white">AI</span>
                 </span>
-                <span className="text-white/30 text-[8px] uppercase tracking-[0.35em] font-semibold mt-0.5">
+                <span className="text-white/40 text-[11px] uppercase tracking-[0.35em] font-bold mt-1.5 group-hover:text-blue-400/60 transition-colors">
                     Hire Smarter with AI
                 </span>
             </div>

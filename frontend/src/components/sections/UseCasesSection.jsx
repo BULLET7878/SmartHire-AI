@@ -33,9 +33,9 @@ const UseCasesSection = () => {
                         <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 transition-transform bg-gradient-to-br from-white/10 to-transparent border border-white/10 shadow-lg">
                             {item.icon}
                         </div>
-                        <h3 className="text-xs font-black text-gray-500 uppercase tracking-widest mb-2">{item.audience}</h3>
+                        <h3 className="text-base font-black text-gray-500 uppercase tracking-widest mb-2">{item.audience}</h3>
                         <h4 className="text-2xl font-bold text-white mb-4">{item.action}</h4>
-                        <p className="text-gray-400 leading-relaxed text-sm">{item.description}</p>
+                        <p className="text-gray-400 leading-relaxed text-base">{item.description}</p>
                     </div>
                 ))}
             </div>

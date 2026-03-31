@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 const HeroSection = () => {
     return (
         <section className="relative min-h-[calc(100vh-64px)] flex flex-col items-center justify-center p-6 text-center pt-20">
-            <div className="max-w-4xl space-y-10 animate-in fade-in zoom-in duration-700">
+            <div className="max-w-4xl space-y-10 scroll-reveal">
                 <div className="space-y-6">
                     <h1 className="heading-xl">
                         AI-Powered Resume Analyzer & <br />
@@ -12,12 +12,12 @@ const HeroSection = () => {
                     <p className="text-xl text-gray-300 font-light max-w-2xl mx-auto leading-relaxed">
                         Analyze resumes, identify skill gaps, and match with relevant job opportunities using AI.
                     </p>
-                    <p className="text-xs md:text-sm text-blue-400 font-black tracking-[0.2em] uppercase mt-2">
+                    <p className="text-sm md:text-base text-blue-400 font-black tracking-[0.2em] uppercase mt-2">
                         Built for students, job seekers, and recruiters
                     </p>
                 </div>
 
-                <div className="flex flex-col items-center gap-3 pt-8">
+                <div className="flex flex-col items-center gap-3 pt-8 scroll-reveal delay-200">
                     <div className="flex flex-col sm:flex-row items-center justify-center gap-4 w-full">
                         <Link to="/demo" className="btn-primary h-14 px-8 flex items-center justify-center text-lg w-full sm:w-auto shadow-xl shadow-gray-900/20 hover:shadow-2xl hover:shadow-gray-900/30">
                             Try Demo ✨
@@ -54,7 +54,7 @@ const HeroSection = () => {
                         </svg>
                     </div>
 
-                    <span className="text-[10px] uppercase tracking-[0.4em] font-black text-white/40 mt-3 group-hover:text-blue-400 transition-colors duration-500">
+                    <span className="text-sm uppercase tracking-[0.4em] font-black text-white/40 mt-3 group-hover:text-blue-400 transition-colors duration-500">
                         Scroll <span className="text-blue-500/50">Down</span>
                     </span>
                 </div>

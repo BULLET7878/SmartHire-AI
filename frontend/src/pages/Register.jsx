@@ -71,7 +71,7 @@ const Register = () => {
                     <div className="relative z-10">
                         <header className="text-center mb-12">
                             <div className="inline-block px-3 py-1 bg-white/5 border border-white/10 rounded-full mb-4">
-                                <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.4em]">Create Account</span>
+                                <span className="text-xs font-black text-blue-400 uppercase tracking-[0.4em]">Create Account</span>
                             </div>
                             <h2 className="text-4xl font-black text-white italic tracking-tighter mb-2">Register</h2>
                             <p className="text-gray-500 text-[12px] font-bold uppercase tracking-widest opacity-60">Join the platform</p>
@@ -90,7 +90,7 @@ const Register = () => {
 
                         <div className={`flex items-center gap-4 mb-6 opacity-40 transition-all duration-700 ${mounted ? 'opacity-100' : 'opacity-0'}`}>
                             <div className="flex-1 h-px bg-white/20"></div>
-                            <span className="text-[10px] uppercase font-bold tracking-widest text-white/50">or register with email</span>
+                            <span className="text-xs uppercase font-bold tracking-widest text-white/50">or register with email</span>
                             <div className="flex-1 h-px bg-white/20"></div>
                         </div>
 
@@ -98,7 +98,7 @@ const Register = () => {
                             <div className="space-y-5">
                                 {/* Staggered Inputs */}
                                 <div className={`transition-all duration-700 delay-100 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
+                                    <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Full Name</label>
                                     <div className="relative group">
                                         <input
                                             type="text"
@@ -113,7 +113,7 @@ const Register = () => {
                                 </div>
 
                                 <div className={`transition-all duration-700 delay-200 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Email Address</label>
+                                    <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Email Address</label>
                                     <div className="relative group">
                                         <input
                                             type="email"
@@ -128,7 +128,7 @@ const Register = () => {
                                 </div>
 
                                 <div className={`transition-all duration-700 delay-300 ${mounted ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-4'}`}>
-                                    <label className="block text-[11px] font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Password</label>
+                                    <label className="block text-xs font-black text-gray-500 uppercase tracking-widest mb-2 ml-1">Password</label>
                                     <div className="relative group">
                                         <input
                                             type="password"
@@ -144,8 +144,8 @@ const Register = () => {
 
                                 <div className={`space-y-3 pt-4 transition-all duration-700 delay-400 ${mounted ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
                                     <div className="flex items-center justify-between px-1">
-                                        <label className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Select Node Type</label>
-                                        <span className="text-[10px] font-bold text-blue-500/50 uppercase tracking-tighter">Required*</span>
+                                        <label className="text-xs font-black text-gray-500 uppercase tracking-widest">Select Node Type</label>
+                                        <span className="text-xs font-bold text-blue-500/50 uppercase tracking-tighter">Required*</span>
                                     </div>
                                     <div className="flex gap-4 p-1 bg-black/40 rounded-2xl border border-white/5">
                                         <button
@@ -193,7 +193,7 @@ const Register = () => {
                         </form>
 
                         <footer className="mt-12 text-center pt-8 border-t border-white/5">
-                            <p className="text-gray-600 text-[9px] font-black uppercase tracking-widest">
+                            <p className="text-gray-600 text-xs font-black uppercase tracking-widest">
                                 Existing Identity? <Link to="/login" className="text-white hover:text-blue-500 transition-colors border-b border-white/20 pb-0.5 ml-1">Login</Link>
                             </p>
                         </footer>

@@ -21,21 +21,21 @@ const BeforeAfterSection = () => {
                                 <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 shrink-0 mt-1 border border-red-500/20 font-bold">✕</div>
                                 <div>
                                     <h4 className="text-lg font-bold text-gray-300 mb-2">No Resume Feedback</h4>
-                                    <p className="text-sm text-gray-500 leading-relaxed">Applying blindly without knowing if your resume passes basic ATS screening rules.</p>
+                                    <p className="text-base text-gray-500 leading-relaxed">Applying blindly without knowing if your resume passes basic ATS screening rules.</p>
                                 </div>
                             </div>
                             <div className="flex gap-5 items-start">
                                 <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 shrink-0 mt-1 border border-red-500/20 font-bold">✕</div>
                                 <div>
                                     <h4 className="text-lg font-bold text-gray-300 mb-2">Random Job Applications</h4>
-                                    <p className="text-sm text-gray-500 leading-relaxed">Wasting time applying to roles where you lack key required skills or keywords.</p>
+                                    <p className="text-base text-gray-500 leading-relaxed">Wasting time applying to roles where you lack key required skills or keywords.</p>
                                 </div>
                             </div>
                              <div className="flex gap-5 items-start">
                                 <div className="w-10 h-10 rounded-xl bg-red-500/10 flex items-center justify-center text-red-400 shrink-0 mt-1 border border-red-500/20 font-bold">✕</div>
                                 <div>
                                     <h4 className="text-lg font-bold text-gray-300 mb-2">Manual Candidate Filtering</h4>
-                                    <p className="text-sm text-gray-500 leading-relaxed">Recruiters spending hours reading resumes to find basic keyword matches.</p>
+                                    <p className="text-base text-gray-500 leading-relaxed">Recruiters spending hours reading resumes to find basic keyword matches.</p>
                                 </div>
                             </div>
                         </div>
@@ -56,21 +56,21 @@ const BeforeAfterSection = () => {
                                 <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 shrink-0 mt-1 border border-green-500/20 font-bold">✓</div>
                                 <div>
                                     <h4 className="text-lg font-bold text-white mb-2">Structured ATS Insights</h4>
-                                    <p className="text-sm text-gray-400 leading-relaxed">Get granular scoring on formatting, keywords, and experience immediately.</p>
+                                    <p className="text-base text-gray-400 leading-relaxed">Get granular scoring on formatting, keywords, and experience immediately.</p>
                                 </div>
                             </div>
                             <div className="flex gap-5 items-start">
                                 <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 shrink-0 mt-1 border border-green-500/20 font-bold">✓</div>
                                 <div>
                                     <h4 className="text-lg font-bold text-white mb-2">Smart Job Matching</h4>
-                                    <p className="text-sm text-gray-400 leading-relaxed">See exactly which skills you're missing before you even click apply.</p>
+                                    <p className="text-base text-gray-400 leading-relaxed">See exactly which skills you're missing before you even click apply.</p>
                                 </div>
                             </div>
                             <div className="flex gap-5 items-start">
                                 <div className="w-10 h-10 rounded-xl bg-green-500/10 flex items-center justify-center text-green-400 shrink-0 mt-1 border border-green-500/20 font-bold">✓</div>
                                 <div>
                                     <h4 className="text-lg font-bold text-white mb-2">Instant Candidate Ranking</h4>
-                                    <p className="text-sm text-gray-400 leading-relaxed">Recruiters instantly see top candidates sorted by objective match scores.</p>
+                                    <p className="text-base text-gray-400 leading-relaxed">Recruiters instantly see top candidates sorted by objective match scores.</p>
                                 </div>
                             </div>
                         </div>

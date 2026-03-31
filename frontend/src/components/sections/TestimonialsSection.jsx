@@ -21,7 +21,8 @@ const TestimonialsSection = () => {
     ];
 
     return (
-        <section className="py-24 px-6 max-w-7xl mx-auto w-full">
+        <section id="testimonials" className="py-24 px-6 max-w-7xl mx-auto w-full">
+
             <div className="text-center space-y-4 mb-20 scroll-reveal">
                 <h2 className="heading-lg">Loved by Teams & Candidates</h2>
                 <p className="text-gray-400 max-w-2xl mx-auto tracking-wide">Trusted by industry professionals to bridge the gap between talent and opportunity.</p>
@@ -50,7 +51,7 @@ const TestimonialsSection = () => {
                             </div>
                             <div>
                                 <h4 className="text-white font-bold text-sm tracking-tight">{item.name}</h4>
-                                <p className="text-gray-500 text-[10px] font-black uppercase tracking-widest">{item.role}</p>
+                                <p className="text-xs font-black text-gray-500 uppercase tracking-widest">{item.role}</p>
                             </div>
                         </div>
                     </div>

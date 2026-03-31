@@ -121,7 +121,7 @@ const DemoPage = () => {
                                 {/* Match Breakdown */}
                                 {result.subScores && (
                                     <div className="space-y-4 pt-4 border-t border-white/10">
-                                        <h4 className="text-[11px] font-black text-gray-500 uppercase tracking-widest">Match Breakdown</h4>
+                                        <h4 className="text-xs font-black text-gray-500 uppercase tracking-widest">Match Breakdown</h4>
                                         <div className="grid grid-cols-2 gap-x-6 gap-y-4">
                                             {[
                                                 { label: 'Formatting', value: result.subScores.formatting },
@@ -130,7 +130,7 @@ const DemoPage = () => {
                                                 { label: 'Education', value: result.subScores.education }
                                             ].map((sub, i) => (
                                                 <div key={i} className="space-y-1.5">
-                                                    <div className="flex justify-between text-[10px] font-bold uppercase text-gray-400">
+                                                    <div className="flex justify-between text-xs font-bold uppercase text-gray-400">
                                                         <span>{sub.label}</span>
                                                         <span>{sub.value}%</span>
                                                     </div>
@@ -186,7 +186,7 @@ const DemoPage = () => {
 
                                     {(result.strengths && result.strengths.length > 0) && (
                                         <div className="p-6 bg-green-500/5 rounded-2xl border border-green-500/10">
-                                            <h4 className="text-[11px] font-black text-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                            <h4 className="text-xs font-black text-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                                                 <span>🚀</span> Key Strengths
                                             </h4>
                                             <ul className="space-y-2">
@@ -202,7 +202,7 @@ const DemoPage = () => {
 
                                     {(result.improvements && result.improvements.length > 0) && (
                                         <div className="p-6 bg-blue-500/5 rounded-2xl border border-blue-500/10">
-                                            <h4 className="text-[11px] font-black text-blue-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                                            <h4 className="text-xs font-black text-blue-400 uppercase tracking-widest mb-3 flex items-center gap-2">
                                                 <span>💡</span> Growth Plan
                                             </h4>
                                             <ul className="space-y-2">

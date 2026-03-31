@@ -18,7 +18,8 @@ const HowItWorksSection = () => {
     ];
 
     return (
-        <section className="py-24 px-6 max-w-7xl mx-auto relative">
+        <section id="how-it-works" className="py-24 px-6 max-w-7xl mx-auto relative">
+
             <div className="text-center space-y-4 mb-20 scroll-reveal">
                 <h2 className="heading-lg">How It Works</h2>
             </div>
@@ -33,7 +34,7 @@ const HowItWorksSection = () => {
                             {step.number}
                         </div>
                         <h3 className="text-2xl font-semibold">{step.title}</h3>
-                        <p className="text-gray-400 max-w-xs">{step.description}</p>
+                        <p className="text-gray-400 max-w-xs text-base">{step.description}</p>
                     </div>
                 ))}
             </div>
