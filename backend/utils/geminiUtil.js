@@ -121,7 +121,7 @@ async function analyzeResume(text) {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const systemPrompt = `
             You are an AI Resume Parser used in a professional ATS system.
@@ -325,7 +325,7 @@ async function calculateMatchInsight(resumeData, jobDescription) {
     }
 
     try {
-        const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+        const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
         const systemPrompt = `
 You are a senior technical recruiter and ATS(Applicant Tracking System) evaluator.
