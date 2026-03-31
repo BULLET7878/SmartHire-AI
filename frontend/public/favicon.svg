@@ -1,27 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 220 240">
-  <rect width="220" height="240" rx="36" fill="#0F172A"/>
-  <polygon points="110,8 202,58 202,182 110,232 18,182 18,58" fill="white"/>
-  <polygon points="110,24 188,66 188,174 110,216 32,174 32,66" fill="none" stroke="#1a1a1a" stroke-width="14" stroke-linejoin="miter"/>
-  <rect x="26" y="44" width="28" height="152" fill="#1a1a1a"/>
-  <rect x="34" y="44" width="12" height="152" fill="white"/>
-  <rect x="166" y="44" width="28" height="152" fill="#1a1a1a"/>
-  <rect x="174" y="44" width="12" height="152" fill="white"/>
-  <rect x="54" y="44" width="140" height="30" fill="#1a1a1a"/>
-  <rect x="54" y="52" width="126" height="14" fill="white"/>
-  <rect x="168" y="52" width="26" height="14" fill="#1a1a1a"/>
-  <rect x="54" y="74" width="28" height="46" fill="#1a1a1a"/>
-  <rect x="62" y="74" width="12" height="46" fill="white"/>
-  <polygon points="54,112 82,112 166,128 166,148 138,148 54,132" fill="#1a1a1a"/>
-  <polygon points="62,112 82,112 158,128 158,148 138,148 62,132" fill="white"/>
-  <rect x="138" y="120" width="28" height="46" fill="#1a1a1a"/>
-  <rect x="146" y="120" width="12" height="46" fill="white"/>
-  <rect x="26" y="166" width="140" height="30" fill="#1a1a1a"/>
-  <rect x="40" y="166" width="126" height="14" fill="white"/>
-  <rect x="26" y="166" width="26" height="14" fill="#1a1a1a"/>
-  <rect x="54" y="106" width="46" height="28" fill="#1a1a1a"/>
-  <rect x="62" y="114" width="30" height="12" fill="white"/>
-  <rect x="120" y="106" width="46" height="28" fill="#1a1a1a"/>
-  <rect x="128" y="114" width="30" height="12" fill="white"/>
-  <polygon points="110,8 202,58 202,182 110,232 18,182 18,58" fill="none" stroke="#1a1a1a" stroke-width="16" stroke-linejoin="miter"/>
-  <polygon points="110,8 202,58 202,182 110,232 18,182 18,58" fill="none" stroke="#2563EB" stroke-width="3" stroke-linejoin="miter"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <!-- Dark background -->
+  <rect width="100" height="100" rx="18" fill="#0f172a"/>
+  <!-- Hexagon glow bg -->
+  <path d="M50 5 L89 27.5 V72.5 L50 95 L11 72.5 V27.5 L50 5Z"
+    fill="rgba(59,130,246,0.1)" stroke="rgba(59,130,246,0.3)" stroke-width="1"/>
+  <!-- H left vertical -->
+  <path d="M30 30 V70" stroke="white" stroke-width="9" stroke-linecap="round"/>
+  <!-- H right vertical -->
+  <path d="M70 30 V70" stroke="white" stroke-width="9" stroke-linecap="round"/>
+  <!-- S shape -->
+  <path d="M30 30 H70 L30 50 H70 L30 70 H70"
+    stroke="#60a5fa" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <!-- Center dot -->
+  <circle cx="50" cy="50" r="2.5" fill="#60a5fa"/>
 </svg>
