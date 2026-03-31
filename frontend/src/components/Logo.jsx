@@ -4,7 +4,7 @@ const Logo = ({ className = "" }) => {
             {/* Geometric SH Monogram */}
             <div className="relative">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"
-                    className="w-12 h-12 group-hover:scale-110 transition-all duration-500 ease-out drop-shadow-[0_0_12px_rgba(96,165,250,0.4)]">
+                    className="w-16 h-16 group-hover:scale-110 transition-all duration-500 ease-out drop-shadow-[0_0_12px_rgba(96,165,250,0.4)]">
                     
                     {/* Background Hexagon Glow */}
                     <path 
