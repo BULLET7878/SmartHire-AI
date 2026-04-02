@@ -86,12 +86,9 @@ const generateToken = (id) => {
 // @route   POST /api/auth/google
 // @access  Public
 const googleLoginUser = async (req, res) => {
-    const { token } = req.body;
-    console.log('--- Google Login Request Initialized ---');
-    console.log(`Token received: ${token ? 'Yes (starts with ' + token.substring(0, 10) + '...)' : 'No'}`);
+    const { token, role } = req.body;
 
     if (!token) {
-        console.error('Error: No Google token provided in request body');
         return res.status(400).json({ message: 'No Google token provided' });
     }
 
@@ -99,35 +96,29 @@ const googleLoginUser = async (req, res) => {
         const client = getGoogleClient();
         const googleIdKey = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID;
 
-        console.log(`Verifying Google token with clientID: ${googleIdKey}`);
-
         const ticket = await client.verifyIdToken({
             idToken: token,
             audience: googleIdKey
         });
 
         const payload = ticket.getPayload();
-        console.log('Google Token Verified Successfully.');
-        console.log(`User Info from Google: ${payload.email} (${payload.name})`);
-
         const { sub: googleId, email, name } = payload;
 
-        // 1. Check if user already exists by googleId
+        // Check if user exists by googleId or email
         let user = await User.findOne({ googleId });
-        console.log(`User lookup by googleId: ${user ? 'Found' : 'Not Found'}`);
 
         if (!user) {
-            // 2. Check if user exists by email (registered normally first)
             user = await User.findOne({ email });
-            console.log(`User lookup by email: ${user ? 'Found' : 'Not Found'}`);
-
             if (user) {
-                console.log(`Linking existing email account to googleId: ${googleId}`);
+                // Link existing account to Google
                 user.googleId = googleId;
                 await user.save();
             } else {
-                console.log(`Creating new user for: ${email}`);
-                // 3. Create a completely new user
+                // New user — require role selection
+                if (!role) {
+                    return res.status(200).json({ needsRole: true, message: 'Please select your role to continue' });
+                }
+
                 const salt = await bcrypt.genSalt(10);
                 const randomPassword = await bcrypt.hash(Math.random().toString(36).slice(-10) + Date.now(), salt);
 
@@ -135,14 +126,11 @@ const googleLoginUser = async (req, res) => {
                     name,
                     email,
                     googleId,
-                    role: 'USER',
-                    password: randomPassword // Dummy secure password since they login via Google
+                    role: role || 'USER',
+                    password: randomPassword
                 });
-                console.log('New user created successfully.');
             }
         }
-
-        console.log(`Login successful for user: ${user.name}`);
 
         res.json({
             _id: user.id,
@@ -153,10 +141,7 @@ const googleLoginUser = async (req, res) => {
         });
 
     } catch (error) {
-        console.error('CRITICAL: Google Auth Error:', error.message);
-        if (error.message.includes('audience')) {
-            console.error('HINT: Your Client ID in .env might not match the one used in the frontend.');
-        }
+        console.error('Google Auth Error:', error.message);
         res.status(401).json({ message: `Google Authentication failed: ${error.message}` });
     }
 };

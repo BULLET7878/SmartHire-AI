@@ -9,6 +9,8 @@ import Dashboard from './pages/Dashboard';
 import CursorTrail from './components/CursorTrail';
 import Footer from './components/Footer';
 
+import SelectRole from './pages/SelectRole';
+
 function App() {
   const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
   
@@ -41,6 +43,7 @@ function App() {
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/dashboard" element={<Dashboard />} />
+              <Route path="/select-role" element={<SelectRole />} />
             </Routes>
           </div>
           <Footer />

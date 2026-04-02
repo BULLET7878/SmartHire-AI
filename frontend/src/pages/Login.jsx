@@ -43,18 +43,23 @@ const Login = () => {
     };
 
     const handleGoogleSuccess = async (response) => {
-        console.log('--- Google Success Event (Frontend) ---');
-        console.log('Credential received from Google:', response.credential ? 'Yes' : 'No');
         try {
-            console.log('Sending token to backend /api/auth/google...');
             const res = await api.post('/auth/google', { token: response.credential });
-            console.log('Backend response received successfully!');
             localStorage.setItem('token', res.data.token);
             const { token, ...userData } = res.data;
             localStorage.setItem('user', JSON.stringify(userData));
-            navigate('/dashboard');
+            // Redirect based on role
+            if (userData.role === 'RECRUITER') {
+                navigate('/dashboard');
+            } else {
+                navigate('/dashboard');
+            }
         } catch (err) {
-            console.error('API Error during Google Auth:', err);
+            // If new Google user needs role selection
+            if (err.response?.data?.needsRole) {
+                navigate('/select-role', { state: { googleToken: response.credential } });
+                return;
+            }
             setError(err.response?.data?.message || 'Google Authentication failed');
         }
     };
