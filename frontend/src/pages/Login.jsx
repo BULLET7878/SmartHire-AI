@@ -45,21 +45,18 @@ const Login = () => {
     const handleGoogleSuccess = async (response) => {
         try {
             const res = await api.post('/auth/google', { token: response.credential });
-            localStorage.setItem('token', res.data.token);
-            const { token, ...userData } = res.data;
-            localStorage.setItem('user', JSON.stringify(userData));
-            // Redirect based on role
-            if (userData.role === 'RECRUITER') {
-                navigate('/dashboard');
-            } else {
-                navigate('/dashboard');
-            }
-        } catch (err) {
-            // If new Google user needs role selection
-            if (err.response?.data?.needsRole) {
+
+            // New user needs role selection
+            if (res.data.needsRole) {
                 navigate('/select-role', { state: { googleToken: response.credential } });
                 return;
             }
+
+            localStorage.setItem('token', res.data.token);
+            const { token, ...userData } = res.data;
+            localStorage.setItem('user', JSON.stringify(userData));
+            navigate('/dashboard');
+        } catch (err) {
             setError(err.response?.data?.message || 'Google Authentication failed');
         }
     };
