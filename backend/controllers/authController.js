@@ -86,53 +86,71 @@ const generateToken = (id) => {
 // @route   POST /api/auth/google
 // @access  Public
 const googleLoginUser = async (req, res) => {
-    const { token, role } = req.body;
+    const { token, role, googleUserInfo } = req.body;
 
-    if (!token) {
+    if (!token && !googleUserInfo) {
         return res.status(400).json({ message: 'No Google token provided' });
     }
 
     try {
-        const client = getGoogleClient();
-        const googleIdKey = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID;
+        let email, name, googleId;
 
-        const ticket = await client.verifyIdToken({
-            idToken: token,
-            audience: googleIdKey
-        });
-
-        const payload = ticket.getPayload();
-        const { sub: googleId, email, name } = payload;
-
-        // Check if user exists by googleId or email
-        let user = await User.findOne({ googleId });
-
-        if (!user) {
-            user = await User.findOne({ email });
-            if (user) {
-                // Link existing account to Google
-                user.googleId = googleId;
-                await user.save();
-            } else {
-                // New user — require role selection
-                if (!role) {
-                    return res.status(200).json({ needsRole: true, message: 'Please select your role to continue' });
-                }
-
-                const salt = await bcrypt.genSalt(10);
-                const randomPassword = await bcrypt.hash(Math.random().toString(36).slice(-10) + Date.now(), salt);
-
-                user = await User.create({
-                    name,
-                    email,
-                    googleId,
-                    role: role || 'USER',
-                    password: randomPassword
-                });
-            }
+        if (token) {
+            // Verify the Google token
+            const client = getGoogleClient();
+            const googleIdKey = process.env.GOOGLE_CLIENT_ID || process.env.VITE_GOOGLE_CLIENT_ID;
+            const ticket = await client.verifyIdToken({ idToken: token, audience: googleIdKey });
+            const payload = ticket.getPayload();
+            email = payload.email;
+            name = payload.name;
+            googleId = payload.sub;
+        } else {
+            // Use pre-verified info passed from frontend
+            email = googleUserInfo.email;
+            name = googleUserInfo.name;
+            googleId = googleUserInfo.googleId;
         }
 
-        res.json({
+        // Check if user exists
+        let user = await User.findOne({ googleId });
+        if (!user) user = await User.findOne({ email });
+
+        if (user) {
+            // Existing user — link googleId if not set and login
+            if (!user.googleId) {
+                user.googleId = googleId;
+                await user.save();
+            }
+            return res.json({
+                _id: user.id,
+                name: user.name,
+                email: user.email,
+                role: user.role,
+                token: generateToken(user._id)
+            });
+        }
+
+        // New user — need role selection
+        if (!role) {
+            return res.status(200).json({
+                needsRole: true,
+                googleUserInfo: { email, name, googleId }
+            });
+        }
+
+        // Create new user with selected role
+        const salt = await bcrypt.genSalt(10);
+        const randomPassword = await bcrypt.hash(Math.random().toString(36).slice(-10) + Date.now(), salt);
+
+        user = await User.create({
+            name,
+            email,
+            googleId,
+            role: role || 'USER',
+            password: randomPassword
+        });
+
+        return res.json({
             _id: user.id,
             name: user.name,
             email: user.email,

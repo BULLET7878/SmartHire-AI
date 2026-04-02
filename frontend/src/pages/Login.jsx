@@ -46,9 +46,9 @@ const Login = () => {
         try {
             const res = await api.post('/auth/google', { token: response.credential });
 
-            // New user needs role selection
+            // New user needs role selection — pass decoded user info via state
             if (res.data.needsRole) {
-                navigate('/select-role', { state: { googleToken: response.credential } });
+                navigate('/select-role', { state: { googleUserInfo: res.data.googleUserInfo } });
                 return;
             }
 

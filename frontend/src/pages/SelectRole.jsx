@@ -9,9 +9,10 @@ const SelectRole = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const googleToken = location.state?.googleToken;
+    const googleUserInfo = location.state?.googleUserInfo;
 
-    // If no google token, redirect to login
-    if (!googleToken) {
+    // If no google info, redirect to login
+    if (!googleToken && !googleUserInfo) {
         navigate('/login');
         return null;
     }
@@ -20,7 +21,10 @@ const SelectRole = () => {
         e.preventDefault();
         setLoading(true);
         try {
-            const res = await api.post('/auth/google', { token: googleToken, role });
+            const payload = googleUserInfo
+                ? { googleUserInfo, role }
+                : { token: googleToken, role };
+            const res = await api.post('/auth/google', payload);
             localStorage.setItem('token', res.data.token);
             const { token, ...userData } = res.data;
             localStorage.setItem('user', JSON.stringify(userData));
