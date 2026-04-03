@@ -36,7 +36,7 @@ const applyToJob = async (req, res) => {
 
             if (resume) {
                 // Calculate Score using Gemini
-                const result = await calculateMatchInsight(resume, job.description || job.title);
+                const result = await calculateMatchInsight(resume, job.jdText || job.description || job.title);
 
                 if (result) {
                     await MatchResult.findOneAndUpdate(
@@ -342,7 +342,7 @@ const getMatchInsight = async (req, res) => {
         const resume = await Resume.findOne({ userId: req.user._id }).sort({ createdAt: -1 });
         if (!resume) return res.status(404).json({ message: 'No resume found' });
 
-        const result = await calculateMatchInsight(resume, job.description || job.title);
+        const result = await calculateMatchInsight(resume, job.jdText || job.description || job.title);
 
         if (result) {
             await MatchResult.findOneAndUpdate(

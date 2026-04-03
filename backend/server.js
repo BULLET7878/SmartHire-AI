@@ -65,14 +65,24 @@ app.use('/api/jobs', require('./routes/jobRoutes'));
 app.use('/api/applications', require('./routes/applicationRoutes'));
 app.use('/api/demo', require('./routes/demoRoutes'));
 
-// Static file serving is handled by Netlify when deployed as a serverless function.
-// Only serve locally during development.
-if (process.env.NODE_ENV !== 'production') {
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
-    app.get(/(.*)/, (req, res) => {
-        res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
-    });
-}
+// Secure File Serving - always available for JD and resume files
+const fs = require('fs');
+app.get('/uploads/:filename', (req, res) => {
+    const { token } = req.query;
+    if (!token) return res.status(401).json({ message: "Not authorized, no token provided" });
+    try {
+        jwt.verify(token, process.env.JWT_SECRET);
+        const filePath = path.join(__dirname, 'uploads', req.params.filename);
+        if (!fs.existsSync(filePath)) return res.status(404).json({ message: "File not found" });
+        if (filePath.endsWith('.pdf')) {
+            res.setHeader('Content-Disposition', 'inline');
+            res.setHeader('Content-Type', 'application/pdf');
+        }
+        res.sendFile(filePath);
+    } catch (error) {
+        res.status(401).json({ message: "Not authorized, invalid or expired token" });
+    }
+});
 
 // Error handling middleware (placeholder)
 app.use((err, req, res, next) => {

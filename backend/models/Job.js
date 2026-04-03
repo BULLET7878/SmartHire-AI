@@ -53,6 +53,18 @@ const jobSchema = mongoose.Schema({
     jdPath: {
         type: String,
         required: false
+    },
+    jdText: {
+        type: String,
+        required: false
+    },
+    jdFileData: {
+        type: Buffer,
+        required: false
+    },
+    jdFileType: {
+        type: String,
+        required: false
     }
 }, {
     timestamps: true

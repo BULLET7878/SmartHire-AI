@@ -396,7 +396,7 @@ const UserDashboard = () => {
                                                 <button
                                                     onClick={(e) => {
                                                         e.stopPropagation();
-                                                        setViewJd(row.jdPath);
+                                                        setViewJd(row._id);
                                                     }}
                                                     className="px-6 py-3 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-2xl border border-white/10 transition-all flex items-center gap-3 shadow-xl group/jd"
                                                 >
@@ -626,7 +626,7 @@ const UserDashboard = () => {
                             <h3 className="text-sm font-black text-white uppercase tracking-widest">Job Description Details</h3>
                             <div className="flex items-center gap-4">
                                 <a
-                                    href={`/uploads/${viewJd}?token=${localStorage.getItem('token')}`}
+                                    href={`/api/jobs/${viewJd}/jd`}
                                     download
                                     className="px-4 py-2 bg-white/5 hover:bg-white/10 text-white text-xs font-black uppercase tracking-widest rounded-xl transition-all"
                                 >
@@ -642,14 +642,14 @@ const UserDashboard = () => {
                         </div>
                         <div className="flex-1 bg-[#1a1a1a] p-1 relative">
                             <object
-                                data={`/uploads/${viewJd}?token=${localStorage.getItem('token')}#toolbar=0&navpanes=0&scrollbar=0`}
+                                data={`/api/jobs/${viewJd}/jd`}
                                 type="application/pdf"
                                 className="w-full h-full rounded-xl border border-white/5"
                             >
                                 <div className="flex flex-col items-center justify-center h-full text-gray-500 gap-4">
                                     <p>Browser unable to embed PDF natively.</p>
                                     <a
-                                        href={`/uploads/${viewJd}?token=${localStorage.getItem('token')}`}
+                                        href={`/api/jobs/${viewJd}/jd`}
                                         target="_blank"
                                         rel="noreferrer"
                                         className="px-6 py-2 bg-blue-600 text-white rounded-xl font-bold"
